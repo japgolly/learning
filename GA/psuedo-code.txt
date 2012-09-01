@@ -1,0 +1,11 @@
+Pcrossover_preservation = 0.98
+Pmutate = 0.2
+
+Create population of random values.
+Loop until children make up same sized population
+  Choose two parents (Higher fitness = higher chance of being chosen)
+  Create two children
+    If rand > Pcrossover_preservation, then no crossover; children same as parents
+    Else choose a crossover point and swap sides so x1x2,y1y2 becomes x1y2,y1x2
+    Optionally mutate a single gene if rand < Pmutate
+Stop looping when child has acceptable fitness
