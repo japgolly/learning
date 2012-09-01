@@ -43,7 +43,7 @@
   [population genes fitness-map fitness-sum p_mutate p_crossover_preservation]
   (let [p1 (choose-parent population fitness-map fitness-sum)
         p2 (choose-parent population fitness-map fitness-sum)
-        [c1,c2] (if (> p_crossover_preservation (rand)) [p1 p2] (crossover p1 p2))
+        [c1,c2] (if (> (rand) p_crossover_preservation) [p1 p2] (crossover p1 p2))
         c1m (if (< (rand) p_mutate) (mutate c1 genes) c1)
         c2m (if (< (rand) p_mutate) (mutate c2 genes) c2)
         ] [c1m,c2m]))
