@@ -64,25 +64,21 @@
   ([population fitness-map best-score best-value]
     (if (empty? population) [best-score best-value]
       (let [cur-score (first fitness-map)
-            [new-best-score,new-best-value] (if (< best-score cur-score) [cur-score (first population)] [best-score best-value])
-           ] (recur (rest population) (rest fitness-map) new-best-score new-best-value)))))
+            [new-best-score,new-best-value] (if (< best-score cur-score) [cur-score (first population)] [best-score best-value]) ]
+        (recur (rest population) (rest fitness-map) new-best-score new-best-value)))))
 
 (defn ga
   ([genes population fitness-fn acceptable-fn]
     (let [fmap (map fitness-fn population)]
       (ga 1 genes population fmap fitness-fn acceptable-fn 0.2 0.98 (get-best population fmap))))
-
   ([it genes population fitness-map fitness-fn acceptable-fn p_mutate p_crossover_preservation [best-score best-value]]
-;(println "---" (first population))
-(println "#" it " - (" best-score ") " (apply str best-value))
+    (println "#" it " - (" best-score ") " (apply str best-value))
     (let [new-pop (breed-population population genes fitness-map p_mutate p_crossover_preservation)
           new-fitness-map (map fitness-fn new-pop)
-          [new-best-score,new-best-value] (get-best new-pop new-fitness-map)
-         ]
+          [new-best-score,new-best-value] (get-best new-pop new-fitness-map) ]
       (if (acceptable-fn new-best-score)
         (apply str new-best-value)
         (recur (inc it) genes new-pop new-fitness-map fitness-fn acceptable-fn p_mutate p_crossover_preservation [new-best-score new-best-value])))))
-
 
 
 (def genes "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz .,!")
