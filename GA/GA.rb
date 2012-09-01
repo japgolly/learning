@@ -75,9 +75,13 @@ def ga(options={})
   until stop
     new_pop= []
 
+    min_fitness= fitness_map.values.min
+    fitness_map2= {}
+    fitness_map.each{|w,f| fitness_map2[w]= f - min_fitness + 1 }
+
     sex_cycles.times do
-      x= random_selection(pop, fitness_map)
-      y= random_selection(pop, fitness_map)
+      x= random_selection(pop, fitness_map2)
+      y= random_selection(pop, fitness_map2)
       child1,child2 = reproduce(x,y, options[:crossover_preservation])
       child1= mutate(child1) if rand < options[:mutate]
       child2= mutate(child2) if rand < options[:mutate]
