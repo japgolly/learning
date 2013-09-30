@@ -169,11 +169,20 @@ type SUCC = λ3[λF3 { type ap[n<:λ,f<:λ,x<:λ] = f ~ (n ~ f ~ x) }]
 //type SUCC2b[n<:λ] = λ2[λF2 { type ap[f<:λ,x<:λ] = f ~ (n#eval ~ f ~ x) }]
 //type SUCC2 = λ1[λF1 { type ap[n<:λ] = SUCC2b[n] }]
 
-trait NF[a<:λ,b<:λ] extends λ {type eval = NF[a#eval,b#eval]; type ap[x<:λ] = NF[x,eval] }
-type NFn = NF[∅,∅]
-type NumEval[N<:λ] = N ~ NFn ~ α
+//trait NFn[a<:λ,b<:λ] extends λ {type eval = NFn[a#eval,b#eval]; type ap[x<:λ] = NFn[x,NFn[a,b]] }
+//trait NF1[a<:λ     ] extends λ {type eval = NF1[a#eval       ]; type ap[x<:λ] = NFn[x,a] }
+//type NF0 = NF1[∅]
+trait F[x<:λ] extends λ {type eval = F[x#eval]; type ap[y<:λ] = F[F[y]] }
+trait F0 extends λ {type eval = F0; type ap[x<:λ] = F[x] }
+type NF0 = F0
+type NumEval[N<:λ] = N ~ NF0 ~ α
 def NumEq[A<:λ, B<:λ](implicit ev: NumEval[A]#eval =:= NumEval[B]#eval) = true
+
+val n0 : NumEval[N0]#eval = null
+val n1 : NumEval[N1]#eval = null
+val n2 : NumEval[N2]#eval = null
+val n3 : NumEval[SUCC ~ N2]#eval = null
 
 NumEq[N1, SUCC ~ N0]
 NumEq[N2, SUCC ~ N1]
-
+NumEq[N2, SUCC ~ (SUCC ~ N0)]
