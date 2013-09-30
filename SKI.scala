@@ -12,7 +12,11 @@ trait λFinn extends λ {
    type ap[n<:λ] = eval#ap[n]
 }
 
-trait ~[x<:λ,y<:λ] extends λFinn { type eval = x#ap[y]#eval }
+trait ~[x<:λ,y<:λ] extends λ {
+  type self = x#ap[y]
+  type ap[z<:λ] = self#ap[z]
+  type eval = self#eval
+}
 
 trait Ap2 extends λ { type ap2[x<:λ,y<:λ] = ap[x]#ap[y] }
 trait Ap3 extends Ap2 { type ap3[x<:λ,y<:λ,z<:λ] = ap[x]#ap[y]#ap[z] }
@@ -155,3 +159,43 @@ Eq[F, CONTAINS ~ T ~ FFF]
 Eq[T, CONTAINS ~ T ~ FFT]
 Eq[T, CONTAINS ~ T ~ FTF]
 Eq[T, CONTAINS ~ T ~ TFF]
+
+type N0 = λ2[λF2 { type ap[f<:λ,x<:λ] = x }]
+type N1 = λ2[λF2 { type ap[f<:λ,x<:λ] = f ~ x }]
+type N2 = λ2[λF2 { type ap[f<:λ,x<:λ] = f ~ (f ~ x) }]
+type SUCC = λ3[λF3 { type ap[n<:λ,f<:λ,x<:λ] = f ~ (n ~ f ~ x) }]
+type SUCC2b[n<:λ] = λ2[λF2 { type ap[f<:λ,x<:λ] = f ~ (n ~ f ~ x) }]
+type SUCC2 = λ1[λF1 { type ap[n<:λ] = SUCC2b[n] }]
+
+type SUCC3b[n<:λ] = λ2[λF2 { type ap[f<:λ,x<:λ] = f ~ (n ~ f ~ x) }]
+type SUCC3 = λ1[λF1 { type ap[n<:λ] = SUCC3b[n] }]
+
+/*
+Eq[N1, SUCC ~ N0]
+Eq[N1, SUCC3 ~ N0]
+
+x: λ2[λF2{type ap[f <: λ, x <: λ] = ~[f,~[ λ2[λF2{type ap[f<:λ,x<:λ] = f ~ x]}] ~ f ,x]]}] = null
+x: λ2[λF2{type ap[f <: λ, x <: λ] = ~[f,~[ f                                        ,x]]}] = null
+
+
+type n1 = λ2[λF2 { type ap[f<:λ,x<:λ] = f#ap[x] }]
+type n2 = λ2[λF2 { type ap[f<:λ,x<:λ] = f#ap[f#ap[x]] }]
+type SUCC4b[n<:λ] = λ2[λF2 { type ap[f<:λ,x<:λ] = f#ap[n#ap[f]#ap[x]] }]
+type SUCC4 = λ1[λF1 { type ap[n<:λ] = SUCC4b[n] }]
+val x: (SUCC4 ~ n1)#eval = null
+val x: (n2)#eval = null
+x: λ2[λF2{type ap[f <: λ, x <: λ] = f#ap[λ2_2[λF2{type ap[f <: λ, x <: λ] = f#ap[x]},f,x]]}] = null
+x: λ2[λF2{type ap[f <: λ, x <: λ] = f#ap[f#ap[x]]}] = null
+
+
+val n2: (N2)#eval = null
+val s1: (SUCC ~ N1)#eval = null
+val s2: (SUCC2 ~ N1)#eval = null
+val s3: (SUCC3 ~ N1)#eval = null
+
+n2: λ2[λF2{type ap[f <: λ, x <: λ] = ~[f,~[f,x]]}] = null
+s1: λ3_1[λF3{type ap[n <: λ, f <: λ, x <: λ] = ~[f,~[~[n,f],x]]},λ2[λF2{type ap[f <: λ, x <: λ] = ~[f,x]}]] = null
+s2: λ2[λF2{type ap[f <: λ, x <: λ] = ~[f,~[~[λ2[λF2{type ap[f <: λ, x <: λ] = ~[f,x]}],f],x]]}] = null
+s3: λ2[λF2{type ap[f <: λ, x <: λ] = ~[f,~[~[λ2[λF2{type ap[f <: λ, x <: λ] = ~[f,x]}],f],x]]}] = null
+
+*/
