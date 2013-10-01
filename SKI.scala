@@ -20,6 +20,7 @@ trait ~[x<:λ,y<:λ] extends λ {
 
 trait Ap2 extends λ { type ap2[x<:λ,y<:λ] = ap[x]#ap[y] }
 trait Ap3 extends Ap2 { type ap3[x<:λ,y<:λ,z<:λ] = ap[x]#ap[y]#ap[z] }
+trait Ap4 extends Ap3 { type ap4[x<:λ,y<:λ,z<:λ,w<:λ] = ap[x]#ap[y]#ap[z]#ap[w] }
 
 trait λF1 { type ap[x<:λ]<:λ }
 trait λ1_1[F<:λF1, x<:λ] extends λFinn { type eval = F#ap[x]#eval }
@@ -52,6 +53,25 @@ trait λ3_1[F<:λF3, x<:λ] extends Ap2{
 trait λ3[F<:λF3] extends Ap3{
   type eval = λ3[F]
   type ap[x<:λ] = λ3_1[F,x]
+}
+
+trait λF4 { type ap[x<:λ, y<:λ, z<:λ, w<:λ]<:λ }
+trait λ4_4[F<:λF4, x<:λ, y<:λ, z<:λ, w<:λ] extends λFinn { type eval = F#ap[x,y,z,w]#eval }
+trait λ4_3[F<:λF4, x<:λ, y<:λ, z<:λ] extends λ{
+  type eval = λ4_3[F,x,y,z]
+  type ap[w<:λ] = λ4_4[F,x,y,z,w]
+}
+trait λ4_2[F<:λF4, x<:λ, y<:λ] extends Ap2{
+  type eval = λ4_2[F,x,y]
+  type ap[z<:λ] = λ4_3[F,x,y,z]
+}
+trait λ4_1[F<:λF4, x<:λ] extends Ap3{
+  type eval = λ4_1[F,x]
+  type ap[y<:λ] = λ4_2[F,x,y]
+}
+trait λ4[F<:λF4] extends Ap4{
+  type eval = λ4[F]
+  type ap[x<:λ] = λ4_1[F,x]
 }
 
 type I = λ1[λF1 { type ap[x<:λ] = x }]
@@ -162,19 +182,20 @@ Eq[T, CONTAINS ~ T ~ FFT]
 Eq[T, CONTAINS ~ T ~ FTF]
 Eq[T, CONTAINS ~ T ~ TFF]
 
+// ====================================================================================================================
+// Church numerals
+
 type N0 = λ2[λF2 { type ap[f<:λ,x<:λ] = x }]
 type N1 = λ2[λF2 { type ap[f<:λ,x<:λ] = f ~ x }]
 type N2 = λ2[λF2 { type ap[f<:λ,x<:λ] = f ~ (f ~ x) }]
+type N3 = λ2[λF2 { type ap[f<:λ,x<:λ] = f ~ (f ~ (f ~ x)) }]
 type SUCC = λ3[λF3 { type ap[n<:λ,f<:λ,x<:λ] = f ~ (n ~ f ~ x) }]
-//type SUCC2b[n<:λ] = λ2[λF2 { type ap[f<:λ,x<:λ] = f ~ (n#eval ~ f ~ x) }]
-//type SUCC2 = λ1[λF1 { type ap[n<:λ] = SUCC2b[n] }]
 
 //trait NFn[a<:λ,b<:λ] extends λ {type eval = NFn[a#eval,b#eval]; type ap[x<:λ] = NFn[x,NFn[a,b]] }
 //trait NF1[a<:λ     ] extends λ {type eval = NF1[a#eval       ]; type ap[x<:λ] = NFn[x,a] }
 //type NF0 = NF1[∅]
-trait F[x<:λ] extends λ {type eval = F[x#eval]; type ap[y<:λ] = F[F[y]] }
-trait F0 extends λ {type eval = F0; type ap[x<:λ] = F[x] }
-type NF0 = F0
+trait NF[x<:λ] extends λ {type eval = NF[x#eval]; type ap[y<:λ] = NF[NF[y]] }
+trait NF0 extends λ {type eval = NF0; type ap[x<:λ] = NF[x] }
 type NumEval[N<:λ] = N ~ NF0 ~ α
 def NumEq[A<:λ, B<:λ](implicit ev: NumEval[A]#eval =:= NumEval[B]#eval) = true
 
@@ -186,3 +207,37 @@ val n3 : NumEval[SUCC ~ N2]#eval = null
 NumEq[N1, SUCC ~ N0]
 NumEq[N2, SUCC ~ N1]
 NumEq[N2, SUCC ~ (SUCC ~ N0)]
+
+type xF = λ1[λF1 { type ap[_<:λ] = F }]
+type ISZERO = λ1[λF1 { type ap[n<:λ] = n ~ xF ~ T }]
+Eq[T, ISZERO ~ N0]
+Eq[F, ISZERO ~ N1]
+
+type PLUS = λ4[λF4 { type ap[m<:λ,n<:λ,f<:λ,x<:λ] = m ~ f ~ (n ~ f ~ x) }]
+NumEq[N2, PLUS ~ N2 ~ N0]
+NumEq[N2, PLUS ~ N1 ~ N1]
+NumEq[N3, PLUS ~ N1 ~ N2]
+NumEq[N3, PLUS ~ N2 ~ N1]
+
+type Clo1[r<:λ] = λ1[λF1 { type ap[_<:λ] = r }]
+type PRED_GH[f<:λ] = λ2[λF2 { type ap[g<:λ,h<:λ] = h ~ (g ~ f) }]
+type PRED = λ3[λF3 { type ap[n<:λ,f<:λ,x<:λ] = n ~ PRED_GH[f] ~ Clo1[x] ~ I }]
+NumEq[N2, PRED ~ N3]
+NumEq[N1, PRED ~ N2]
+NumEq[N0, PRED ~ N1]
+
+// NOTE: Negative numbers all stay 0
+type MINUS = λ2[λF2 { type ap[m<:λ,n<:λ] = (n ~ PRED) ~ m }]
+NumEq[N2, MINUS ~ N2 ~ N0]
+NumEq[N1, MINUS ~ N2 ~ N1]
+NumEq[N0, MINUS ~ N2 ~ N2]
+NumEq[N0, MINUS ~ N0 ~ N0]
+
+type NUMEQ = λ2[λF2 { type ap[m<:λ,n<:λ] = And ~ (ISZERO ~ (MINUS ~ m ~ n)) ~ (ISZERO ~ (MINUS ~ n ~ m)) }]
+Eq[T, NUMEQ ~ N0 ~ N0]
+Eq[T, NUMEQ ~ N1 ~ N1]
+Eq[T, NUMEQ ~ N2 ~ N2]
+Eq[F, NUMEQ ~ N1 ~ N0]
+Eq[F, NUMEQ ~ N1 ~ N2]
+Eq[F, NUMEQ ~ N0 ~ N1]
+Eq[F, NUMEQ ~ N2 ~ N1]
