@@ -190,6 +190,7 @@ type N1 = λ2[λF2 { type ap[f<:λ,x<:λ] = f ~ x }]
 type N2 = λ2[λF2 { type ap[f<:λ,x<:λ] = f ~ (f ~ x) }]
 type N3 = λ2[λF2 { type ap[f<:λ,x<:λ] = f ~ (f ~ (f ~ x)) }]
 type SUCC = λ3[λF3 { type ap[n<:λ,f<:λ,x<:λ] = f ~ (n ~ f ~ x) }]
+type N4 = SUCC ~ N3
 
 //trait NFn[a<:λ,b<:λ] extends λ {type eval = NFn[a#eval,b#eval]; type ap[x<:λ] = NFn[x,NFn[a,b]] }
 //trait NF1[a<:λ     ] extends λ {type eval = NF1[a#eval       ]; type ap[x<:λ] = NFn[x,a] }
@@ -241,3 +242,59 @@ Eq[F, NUMEQ ~ N1 ~ N0]
 Eq[F, NUMEQ ~ N1 ~ N2]
 Eq[F, NUMEQ ~ N0 ~ N1]
 Eq[F, NUMEQ ~ N2 ~ N1]
+
+type IFNUMEQ = λ4[λF4 { type ap[m<:λ,n<:λ,t<:λ,f<:λ] = IF ~ (NUMEQ ~ m ~ n) ~ t ~ f }]
+
+// ====================================================================================================================
+// Enforcing exclusive disjunction (A or B but not both)
+
+/*
+Env *- debug[b]
+Capability *- risk score  = failure + DB+2 + out+3 (0-10)
+Capability *- connect to outside
+Capability *- connect to DB
+Capability *- impact failure [0-5]
+Capability
+*/
+
+trait Env {
+  type Debug <: λ
+}
+
+trait Capability {
+  type ConnectsToOutside <: λ
+  type ConnectsToDB <: λ
+  type ImpactFailure <: λ
+  final type RiskScore = PLUS ~ (If ~ ConnectsToOutside ~ N3 ~ N0) ~ (PLUS ~ (If ~ ConnectsToDB ~ N2 ~ N0) ~ ImpactFailure)
+}
+
+trait BalanceCalc extends Capability {
+  override type ConnectsToOutside = F
+  override type ConnectsToDB = T
+  override type ImpactFailure = N4
+}
+
+trait MemCheck extends Capability {
+  override type ConnectsToOutside = F
+  override type ConnectsToDB = F
+  override type ImpactFailure = N0
+}
+
+trait RequestStmt extends Capability {
+  override type ConnectsToOutside = T
+  override type ConnectsToDB = F
+  override type ImpactFailure = N1
+}
+
+trait Module {
+  //type Capabilities <: HList of Capability
+}
+
+object DoesHeaps {
+
+}
+
+/*
+trait OMG{ type ImpactFailure <: V forSome {type V <: λ; type Check <: NUMEQ ~ V ~ N2 } }
+new OMG{type ImpactFailure = N3}
+*/
