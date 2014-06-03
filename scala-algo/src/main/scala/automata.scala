@@ -1,44 +1,17 @@
 package golly.algo.automata
 
 import scala.annotation.tailrec
-//import scalaz.{Order, ISet}
-
-trait SetT[S[_], A] {
-  def contains(s: S[A], a: A): Boolean
-  def isEmpty(s: S[A]): Boolean
-  def empty: S[A]
-  def point(a: A): S[A]
-  def union(a: S[A], b: S[A]): S[A]
-  def exists(s: S[A], f: A => Boolean): Boolean
-  def fold[B](s: S[A], b: B)(f: (B, A) => B): B
-}
-
-object SetT {
-//  implicit def ISetT[A: Order]: SetT[ISet, A] = new SetT[ISet, A] {
-//    override def contains(s: ISet[A], a: A) = s contains a
-//  }
-
-  implicit def ScalaSetT[A]: SetT[Set, A] = new SetT[Set, A] {
-    override def contains(s: Set[A], a: A) = s contains a
-    override def isEmpty(s: Set[A]) = s.isEmpty
-    override def empty = Set.empty[A]
-    override def point(a: A) = Set(a)
-    override def union(a: Set[A], b: Set[A]) = a ++ b
-    override def exists(s: Set[A], f: A => Boolean) = s exists f
-    override def fold[B](s: Set[A], b: B)(f: (B, A) => B) = s.foldLeft(b)(f)
-  }
-}
 
 // ============================================================================================================
 
-case class DFA[S[_], Q, Σ](states: S[Q], alphabet: S[Σ], δ: (Q, Σ) => Option[Q], q0: Q, accepts: S[Q])(implicit S: SetT[S, Q]) {
+case class DFA[Q, Σ](states: Set[Q], alphabet: Set[Σ], δ: (Q, Σ) => Option[Q], q0: Q, accepts: Set[Q]) {
 
   def run(language: List[Σ]): Boolean = {
 
     @tailrec
     def go(cur: Q, lang: List[Σ]): Boolean = lang match {
       case Nil =>
-        S.contains(accepts, cur)
+        accepts contains cur
       case h :: t =>
         δ(cur, h) match {
           case Some(next) => go(next, t)
@@ -52,23 +25,23 @@ case class DFA[S[_], Q, Σ](states: S[Q], alphabet: S[Σ], δ: (Q, Σ) => Option
 
 // ============================================================================================================
 
-case class NFA[S[_], Q, Σ](states: S[Q], alphabet: S[Σ], δ: (Q, Σ) => S[Q], q0: Q, accepts: S[Q])(implicit S: SetT[S, Q]) {
+case class NFA[Q, Σ](states: Set[Q], alphabet: Set[Σ], δ: (Q, Σ) => Set[Q], q0: Q, accepts: Set[Q]) {
 
   def println(s: => Any = ""): Unit = ()// Console.println(s)
 
   def run(language: List[Σ]): Boolean = {
 
-    def Δ(cur: S[Q], σ: Σ) = S.fold(cur, S.empty)((r, q) => S.union(r, δ(q, σ)))
+    def Δ(cur: Set[Q], σ: Σ) = cur.foldLeft(Set.empty[Q])((r, q) => r ++ δ(q, σ))
 
     @tailrec
-    def go(cur: S[Q], lang: List[Σ]): Boolean = {
+    def go(cur: Set[Q], lang: List[Σ]): Boolean = {
       println(s"$cur ⇐ $lang")
       lang match {
         case Nil =>
-          S.exists(accepts, q => S.exists(cur, _ == q))
+          accepts.exists(q => cur.exists(_ == q))
         case h :: t =>
           val next = Δ(cur, h)
-          if (S isEmpty next)
+          if (next.isEmpty)
             false
           else
             go(next, t)
@@ -76,12 +49,8 @@ case class NFA[S[_], Q, Σ](states: S[Q], alphabet: S[Σ], δ: (Q, Σ) => S[Q], 
     }
 
     println()
-    val r = go(S point q0, language)
+    val r = go(Set(q0), language)
     println(s"  ⇒ $r")
     r
-  }
-
-  def toDFA: DFA[S, Q, Σ] == {
-
   }
 }
