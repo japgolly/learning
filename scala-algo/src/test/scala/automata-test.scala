@@ -39,22 +39,13 @@ class AutomataTest extends Specification with ScalaCheck {
   }
 
   lazy val dfa2 = dfa.minimiseHopcroft
-  lazy val dfai = dfa.toDFAia
-  lazy val dfai2 = dfa2.minimiseHopcroft.toDFAia
+  lazy val dfai = dfa.toDFAi
+  lazy val dfai2 = dfa2.minimiseHopcroft.toDFAi
 
   Console println dfa.show
   Console println dfa2.show
   Console println dfai.show
   Console println dfai2.show
-//  Console println dfa.minimiseHopcroft.show
-//  Console println dfa.minimiseHopcroft2.show
-//  Console println dfa.minimiseHopcroft3.show
-//  Console println dfa.minimiseHopcroft4.show
-
-  //lazy val dfa2 = dfa.minimiseHopcroft
-//  println(dfa2)
-//  Console println dfai.show
-//  Console println dfai2.show
 
   "NFA" should {
     "match 'cat'" in { nfa.run("cat".toList) must beTrue}
@@ -65,7 +56,6 @@ class AutomataTest extends Specification with ScalaCheck {
   }
 
   def test(dfa: {def run(language: List[Char]): Boolean}) = {
-    println(dfa)
     "match 'bot'" in { dfa.run("bot".toList) must beTrue}
     "match 'bOt'" in { dfa.run("bOt".toList) must beTrue}
     "match 'boot'" in { dfa.run("boot".toList) must beTrue}

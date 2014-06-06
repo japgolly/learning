@@ -51,29 +51,7 @@ case class IndexedSet[A](set: Set[A]) {
   def size = set.size
 }
 
-//case AdjMatrix()
-
-//case class DFAi(states: Int, alphabetSize: Int, δ: (Int, Int) => Option[Int], q0: Int, accepts: Set[Int]) {
-//  assert(states > 0)
-//  assert(alphabetSize > 0)
-//  assert(q0 >= 0 && q0 < states)
-//
-//  def run(language: List[Int]): Boolean = {
-//    @tailrec
-//    def go(cur: Int, lang: List[Int]): Boolean = lang match {
-//      case Nil =>
-//        accepts contains cur
-//      case h :: t =>
-//        δ(cur, h) match {
-//          case Some(next) => go(next, t)
-//          case None => false
-//        }
-//    }
-//    go(q0, language)
-//  }
-//}
-
-case class DFAia[Σ](states: Int, alphabet: Set[Σ], δ: (Int, Σ) => Option[Int], q0: Int, accepts: Set[Int]) {
+case class DFAi[Σ](states: Int, alphabet: Set[Σ], δ: (Int, Σ) => Option[Int], q0: Int, accepts: Set[Int]) {
   assert(states > 0)
   assert(q0 >= 0 && q0 < states)
 
@@ -128,17 +106,10 @@ case class DFA[Q, Σ](states: Set[Q], alphabet: Set[Σ], δ: (Q, Σ) => Option[Q
     s"DFA Size = ${states.size}x${alphabet.size}\n" + AsciiTable.render(hdr :: body)
   }
 
-//  def toDFAi = {
-//    val si = IndexedSet(states)
-//    val ai = IndexedSet(alphabet)
-//    val Δ: (Int, Int) => Option[Int] = (stateI, letterI) => δ(si.byInd(stateI), ai.byInd(letterI)).map(si.toInd(_))
-//    DFAi(si.size, ai.size, Δ, si.toInd(q0), accepts.map(si.toInd))
-//  }
-
-  def toDFAia = {
+  def toDFAi = {
     val si = IndexedSet(states)
     val Δ: (Int, Σ) => Option[Int] = (stateI, letter) => δ(si.byInd(stateI), letter).map(si.toInd(_))
-    DFAia(si.size, alphabet, Δ, si.toInd(q0), accepts.map(si.toInd))
+    DFAi(si.size, alphabet, Δ, si.toInd(q0), accepts.map(si.toInd))
   }
 
   def smaller[A](a: Set[A], b: Set[A]) = if (a.size <= b.size) a else b
@@ -153,29 +124,6 @@ case class DFA[Q, Σ](states: Set[Q], alphabet: Set[Σ], δ: (Q, Σ) => Option[Q
     (b & x, b & y)
   }
 
-  // http://www.dcc.fc.up.pt/dcc/Pubs/TReports/TR07/dcc-2007-03.pdf
-  def minimiseHopcroft2 = {
-    var p = Set(accepts, states -- accepts)
-    var l = Set(accepts)
-    while (l.nonEmpty) {
-      val s = l.head
-      l -= s
-      for (a <- alphabet) {
-        var p2 = p
-        for (b <- p) {
-          val (b1,b2) = split(b, s, a)
-          if (b1.nonEmpty && b2.nonEmpty) {
-            p2 = p2 - b + b1 + b2
-            l += smaller(b1, b2)
-          }
-        }
-        p = p2
-      }
-    }
-
-    minimiseWith(p)
-  }
-
   // http://en.wikipedia.org/wiki/DFA_minimization
   def minimiseHopcroft = {
     var p = Set(accepts, states -- accepts)
@@ -184,19 +132,19 @@ case class DFA[Q, Σ](states: Set[Q], alphabet: Set[Σ], δ: (Q, Σ) => Option[Q
     while (w.nonEmpty) {
       val a = w.head
       w -= a
-      println(s"A = $a, W = $w, P = $p")
+//      println(s"A = $a, W = $w, P = $p")
       for (c <- alphabet) {
         val x = δInv(c)(a)
-        println(s"  Set of states for which a transition on '$c' leads to a state in $a  =  $x")
+//        println(s"  Set of states for which a transition on '$c' leads to a state in $a  =  $x")
         var p2 = p
         for {
           y <- p
           intersection = x & y if intersection.nonEmpty
           compliment = y -- x if compliment.nonEmpty
         } {
-          println(s"  P2 = $p2 | INT = $intersection | COM = $compliment | X = $x | Y = $y")
+//          println(s"  P2 = $p2 | INT = $intersection | COM = $compliment | X = $x | Y = $y")
           p2 = p2 - y + intersection + compliment
-          println("  P2 = "+p2)
+//          println("  P2 = "+p2)
           if (w contains y)
             w = w - y + intersection + compliment
           else
@@ -204,67 +152,7 @@ case class DFA[Q, Σ](states: Set[Q], alphabet: Set[Σ], δ: (Q, Σ) => Option[Q
         }
         p = p2
       }
-      println()
-    }
-
-    minimiseWith(p)
-  }
-
-  def minimiseHopcroft4 = {
-    val c0 = accepts
-    val c1 = states -- accepts
-    var p = Set(c0, c1)
-    var l = Set(smaller(c0, c1))
-    while (l.nonEmpty) {
-      val c = l.head
-      l -= c
-      println(s"C = $c, L = $l, P = $p")
-      for (a <- alphabet) {
-        println(s"---> P = $p")
-        for (b <- p) {
-          println(s"       b = $b")
-          val (b1,b2) = split(b, c, a)
-//          println(s"  a = $a, b = $b, b1|2 = $b1|$b2, P = $p")
-          if (b1.nonEmpty) {
-            p = p - b + b1 + b2
-            if (l(b))
-              l = l - b + b1 + b2
-            else
-              l += smaller(b1, b2)
-          }
-        }
-      }
-    }
-
-    minimiseWith(p)
-  }
-
-  // http://computerlabor.math.uni-kiel.de/stochastik/colloquium08/slides/carton.pdf
-  def minimiseHopcroft3 = {
-    val F = accepts
-    val Fc = states -- accepts
-    val minFFc = smaller(F, Fc)
-    var p = Set(F, Fc)
-    var w = alphabet.map(a => (minFFc, a))
-    while (w.nonEmpty) {
-      val pair = w.head
-      w -= pair
-      val (c, a) = pair
-      println(s"C = $c, a = $a, W = $w, P = $p")
-
-      var p2 = p
-      for (b <- p) {
-        val (b1, b2) = split(b, c, a)
-        if (b1.nonEmpty && b2.nonEmpty) {
-          p2 = p2 - b + b1 + b2
-          for (bb <- alphabet)
-            if (w.contains((b, bb)))
-              w = w - ((b, bb)) + ((b1, bb)) + ((b2, bb))
-            else
-              w += ((smaller(b1, b2), bb))
-        }
-      }
-      p = p2
+//      println()
     }
 
     minimiseWith(p)
