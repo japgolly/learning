@@ -2,12 +2,106 @@ package golly.algo.automata
 
 import scala.annotation.tailrec
 
+object AsciiTable {
+
+  def render(data: List[Vector[String]], topHeader: Boolean = true, leftHeader: Boolean = true): String =
+    if (data.isEmpty) "" else {
+      val cols = data.map(_.size).max
+      val f = {
+        val ws = (0 until cols).toList.map(i => data.map(_.applyOrElse(i, (_: Int) => "").size).max).map(w => s"%${w}s")
+        val sep = "   "
+        val x = if (leftHeader && cols > 1)
+          ws.head + " | " + ws.tail.mkString(sep)
+        else
+          ws.mkString(sep)
+        x + " |"
+      }
+
+      var lines = data.map(v => f.format(v: _*))
+      val hr = "-" * lines.head.size
+      if (topHeader && lines.size > 1) lines = lines.head :: hr :: lines.tail
+      lines = hr :: lines ::: hr :: Nil
+
+      lines mkString "\n"
+    }
+}
+
 //object Implicits {
 //  implicit class SetExt[A](s: Set[A]) extends AnyVal {
 //  }
 //}
 
 // ============================================================================================================
+
+object Util {
+  def nameState[Q](q0: Q, accepts: Set[Q]): Q => String = {
+    case q if q == q0 => s"$q→"
+    case q if accepts contains q => s"$q*"
+    case q => q + " "
+  }
+}
+import Util._
+
+case class IndexedSet[A](set: Set[A]) {
+  val (byInd, toInd) = {
+    val v = set.zipWithIndex
+    val to = v.toVector.sortBy(_._2).map(_._1)
+    (to, v.toMap)
+  }
+  def size = set.size
+}
+
+//case AdjMatrix()
+
+//case class DFAi(states: Int, alphabetSize: Int, δ: (Int, Int) => Option[Int], q0: Int, accepts: Set[Int]) {
+//  assert(states > 0)
+//  assert(alphabetSize > 0)
+//  assert(q0 >= 0 && q0 < states)
+//
+//  def run(language: List[Int]): Boolean = {
+//    @tailrec
+//    def go(cur: Int, lang: List[Int]): Boolean = lang match {
+//      case Nil =>
+//        accepts contains cur
+//      case h :: t =>
+//        δ(cur, h) match {
+//          case Some(next) => go(next, t)
+//          case None => false
+//        }
+//    }
+//    go(q0, language)
+//  }
+//}
+
+case class DFAia[Σ](states: Int, alphabet: Set[Σ], δ: (Int, Σ) => Option[Int], q0: Int, accepts: Set[Int]) {
+  assert(states > 0)
+  assert(q0 >= 0 && q0 < states)
+
+  def run(language: List[Σ]): Boolean = {
+    @tailrec
+    def go(cur: Int, lang: List[Σ]): Boolean = lang match {
+      case Nil =>
+        accepts contains cur
+      case h :: t =>
+        δ(cur, h) match {
+          case Some(next) => go(next, t)
+          case None => false
+        }
+    }
+    go(q0, language)
+  }
+
+  def show = {
+    val al = alphabet.toVector
+    val hdr = "" +: al.map(_.toString)
+    val body = (0 until states).toList.map(q => nameState(q0, accepts)(q) +: al.map(a => δ(q, a).fold(".")(_.toString)))
+    s"DFA Size = ${states}x${alphabet.size}\n" + AsciiTable.render(hdr :: body)
+  }
+
+  def toDFA = DFA((0 until states).toSet, alphabet, δ, q0, accepts)
+}
+
+
 
 case class DFA[Q, Σ](states: Set[Q], alphabet: Set[Σ], δ: (Q, Σ) => Option[Q], q0: Q, accepts: Set[Q]) {
 
@@ -25,6 +119,26 @@ case class DFA[Q, Σ](states: Set[Q], alphabet: Set[Σ], δ: (Q, Σ) => Option[Q
     }
 
     go(q0, language)
+  }
+
+  def show = {
+    val al = alphabet.toVector
+    val hdr = "" +: al.map(_.toString)
+    val body = states.toList.map(q => nameState(q0, accepts)(q) +: al.map(a => δ(q, a).fold(".")(_.toString)))
+    s"DFA Size = ${states.size}x${alphabet.size}\n" + AsciiTable.render(hdr :: body)
+  }
+
+//  def toDFAi = {
+//    val si = IndexedSet(states)
+//    val ai = IndexedSet(alphabet)
+//    val Δ: (Int, Int) => Option[Int] = (stateI, letterI) => δ(si.byInd(stateI), ai.byInd(letterI)).map(si.toInd(_))
+//    DFAi(si.size, ai.size, Δ, si.toInd(q0), accepts.map(si.toInd))
+//  }
+
+  def toDFAia = {
+    val si = IndexedSet(states)
+    val Δ: (Int, Σ) => Option[Int] = (stateI, letter) => δ(si.byInd(stateI), letter).map(si.toInd(_))
+    DFAia(si.size, alphabet, Δ, si.toInd(q0), accepts.map(si.toInd))
   }
 
   def smaller[A](a: Set[A], b: Set[A]) = if (a.size <= b.size) a else b
@@ -65,14 +179,15 @@ case class DFA[Q, Σ](states: Set[Q], alphabet: Set[Σ], δ: (Q, Σ) => Option[Q
   // http://en.wikipedia.org/wiki/DFA_minimization
   def minimiseHopcroft = {
     var p = Set(accepts, states -- accepts)
-    var w = Set(accepts)
+    //var w = Set(accepts) // wikipedia says
+    var w = Set(states -- accepts) // trumping wikipedia here
     while (w.nonEmpty) {
       val a = w.head
       w -= a
       println(s"A = $a, W = $w, P = $p")
       for (c <- alphabet) {
         val x = δInv(c)(a)
-        //println(s"Set of states for which a transition on '$c' leads to a state in $a  =  $x")
+        println(s"  Set of states for which a transition on '$c' leads to a state in $a  =  $x")
         var p2 = p
         for {
           y <- p
@@ -89,6 +204,7 @@ case class DFA[Q, Σ](states: Set[Q], alphabet: Set[Σ], δ: (Q, Σ) => Option[Q
         }
         p = p2
       }
+      println()
     }
 
     minimiseWith(p)
@@ -167,6 +283,9 @@ case class DFA[Q, Σ](states: Set[Q], alphabet: Set[Σ], δ: (Q, Σ) => Option[Q
     val δ2: (Q, Σ) => Option[Q] = δ(_,_) map fix
     DFA(states -- dupQs, alphabet, δ2, fix(q0), accepts -- dupQs)
   }
+
+  def println(s: => Any = ""): Unit = ()// Console.println(s)
+
 }
 
 // ============================================================================================================
