@@ -59,8 +59,7 @@ object LiveDemo {
         val nextLevel = spec.copy(currentDepth = spec.currentDepth + 1)
         val minSize = if (spec.minDepthReached) 0 else 1
         gens ::= Gen.pure(nextLevel).list(minSize to 4).map(JsonF.Arr(_))
-        gens ::= genString.map((_, nextLevel)).list(minSize to 4)
-          .map(JsonF.Obj(_))
+        gens ::= genString.map((_, nextLevel)).list(minSize to 4).map(JsonF.Obj(_))
       }
 
       Gen.chooseGen_!(gens)
@@ -80,6 +79,7 @@ object LiveDemo {
 
   def generate(minDepth: Int, maxDepth: Int): Gen[JsValue] =
     EasyRecursion.monadicUnfoldIntoFold(
-      generateJson, jsonToPlayJson.toAlgebraM[Gen]
-    )(Spec(1, minDepth, maxDepth))
+      generateJson,                    // CoalgebraM
+      jsonToPlayJson.toAlgebraM[Gen])( // AlgebraM
+      Spec(1, minDepth, maxDepth))     // A
 }
