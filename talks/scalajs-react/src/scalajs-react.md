@@ -46,7 +46,7 @@ revealOptions:
 
 ---
 
-![ShipReq](shipreq.svg) <!-- .element: style="border:none; padding:1ex; background:#fff" -->
+<img src="shipreq.svg" alt="ShipReq" style="border:none; padding:1ex; background:#fff" />
 
 I'm determined to make the best app for **Software Requirements** in the world!
 
