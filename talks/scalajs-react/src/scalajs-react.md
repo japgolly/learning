@@ -31,7 +31,7 @@ revealOptions:
 
 <div style="display:flex">
 <div>
-  ![](assets/goose-hi.jpg)
+  ![](goose-hi.jpg)
 </div>
 <div style="text-align:left; padding-left:1ex">
   <p>David Barri</p>
@@ -46,7 +46,7 @@ revealOptions:
 
 ---
 
-![ShipReq](assets/shipreq.svg) <!-- .element: style="border:none; padding:1ex; background:#fff" -->
+![ShipReq](shipreq.svg) <!-- .element: style="border:none; padding:1ex; background:#fff" -->
 
 I'm determined to make the best app for **Software Requirements** in the world!
 
@@ -172,13 +172,13 @@ Library, not a framework
 
 "Type-safe" can be a buzzword
 
-![](assets/string3.jpg)
+![](string3.jpg)
 
 ---
 
 "Type-safe" ≠ "Compiles in typed language"
 
-![](assets/string3.jpg)
+![](string3.jpg)
 
 ---
 
@@ -1068,7 +1068,7 @@ Let's extract a Button Component!
 
 ---
 
-![](assets/FilterDeadButton.gif)
+![](FilterDeadButton.gif)
 <!-- .element: style="border-width:0" -->
 
 ```scala
@@ -1157,7 +1157,7 @@ final class TodoListBackend($: BackendScope[Unit, State]) {
 
 <div style="display:flex">
 <div style="width:50%; text-align:right; padding-right:10rem">
-<img src="assets/nim-crying.jpg" style="height:35.8%; width:auto" />
+<img src="nim-crying.jpg" style="height:35.8%; width:auto" />
 </div>
 <div style="width:50%; text-align:left; padding-left:0rem">
 <h1 style="padding:0; margin:-5rem 0 0 0; font-size:1400%">NO!</h1>
@@ -1509,7 +1509,7 @@ Note: You're not expected to retain this. I just want to let you know what's ava
 
 ---
 
-<!-- .slide: data-background="assets/WHIRL.svg" data-background-size="100% 100%" -->
+<!-- .slide: data-background="WHIRL.svg" data-background-size="100% 100%" -->
 
 ---
 
@@ -1613,9 +1613,9 @@ addItem("hello")
 
 ---
 
-![Pass](assets/teststate-pass.png)
+![Pass](teststate-pass.png)
 
-![Fail](assets/teststate-fail.png)
+![Fail](teststate-fail.png)
 
 ---
 
@@ -1684,7 +1684,7 @@ https://facebook.github.io/react/docs/perf.html
 
 From browser console:
 
-![](assets/perf-wasted.png)
+![](perf-wasted.png)
 
 ---
 
@@ -1833,7 +1833,7 @@ Live benchmarks: https://japgolly.github.io/scalajs-benchmark/
 
 Check out *Diode*.
 
-![](assets/diode.png) <!-- .element: style="background:#fff; padding:1rem" -->
+![](diode.png) <!-- .element: style="background:#fff; padding:1rem" -->
 
 https://github.com/suzaku-io/diode
 
