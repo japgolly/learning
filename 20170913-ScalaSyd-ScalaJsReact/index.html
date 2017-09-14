@@ -36,9 +36,9 @@
   <p>Github: https://github.com/japgolly</p>
   <p>Twitter: <a href="#">@japgolly</a></p>
   <p style="margin-top:2em">❤️ Creating</p>
-  <p class="fragment">Programming - 29yrs (WTF?!)</p>
-  <p class="fragment">Scala - 4.6yrs (16%)</p>
-  <p class="fragment">FP - 4.3yrs (15%)</p>
+  <p class="aahhh">Programming - 29yrs (WTF?!)</p>
+  <p class="aahhh">Scala - 4.6yrs (16%)</p>
+  <p class="aahhh">FP - 4.3yrs (15%)</p>
 </div>
 </div>
 </script></section><section  data-markdown><script type="text/template">
@@ -46,7 +46,7 @@
 
 I'm determined to make the best app for **Software Requirements** in the world!
 
-<div class="fragment" />
+<div class="aahhh" />
 <br>
 
 Not public yet.
@@ -103,7 +103,7 @@ Email me at <a href="mailto:contact@shipreq.com">contact@shipreq.com</a> if you'
 
 <ul>
 <li>Write Scala, emit JS</li>
-<li class="fragment">
+<li class="aahhh">
   Static types for your frontend
   <ul>
   <li>compile-time proof of correctness</li>
@@ -126,7 +126,7 @@ Email me at <a href="mailto:contact@shipreq.com">contact@shipreq.com</a> if you'
   <li>Logic</li>
   </ul>
 </li>
-<li class="fragment">Scala facades add types over raw JS</li>
+<li class="aahhh">Scala facades add types over raw JS</li>
 </ul>
 
 <aside class="notes"><p>Depending on the library, using a SJS facade is as {,un}safe as using raw JS. Often a Scala layer is required.</p>
@@ -140,7 +140,7 @@ I'm the author *(hi!)*
 Library, not a framework
 </li><li>
   Much more than a Scala.JS facade
-  <ul class="fragment">
+  <ul class="aahhh">
   <li>Type-safe as possible</li>
   <li>FP principals</li>
   <li>Test support</li>
@@ -164,22 +164,22 @@ def hmmm:
   Either[Int, (Char, Char)]
 ```
 
-<div class="fragment" />
+<div class="aahhh" />
 
 How many implementations will scalac will accept?
 
-<div class="fragment" />
+<div class="aahhh" />
 
 <ul style="font-family: monospace; font-size: 58%;">
 <li>(2^32 + 2(2^16)) ^ 2(2^32 + 2^16)</li>
-<li class="fragment">(2^32 + 2^17) ^ (2^33 + 2^17)</li>
-<li class="fragment">4,295,098,368 ^ 8,590,065,664</li>
-<li class="fragment">≈ 3.05 . 10 ^ 82,747,871,594</li>
-<li class="fragment">≈ 47,500 volumes of 1000-page books</li>
-<li class="fragment">≈ 4231 copies of The Malazan Book of the Fallen</li>
+<li class="aahhh">(2^32 + 2^17) ^ (2^33 + 2^17)</li>
+<li class="aahhh">4,295,098,368 ^ 8,590,065,664</li>
+<li class="aahhh">≈ 3.05 . 10 ^ 82,747,871,594</li>
+<li class="aahhh">≈ 47,500 volumes of 1000-page books</li>
+<li class="aahhh">≈ 4231 copies of The Malazan Book of the Fallen</li>
 </ul>
 
-<div class="fragment" />
+<div class="aahhh" />
 
 **How many implementations did you intend?**
 </script></section><section  data-markdown><script type="text/template">
@@ -199,11 +199,11 @@ def great[E, A, B]:
 
 How many implementations will scalac will accept?
 
-<div class="fragment" />
+<div class="aahhh" />
 
 Answer: 2
 
-<div class="fragment" />
+<div class="aahhh" />
 <br/>
 
 ```c
@@ -217,7 +217,7 @@ scalajs-react is as type-safe as possible,
 
 sometimes as reasonable.
 
-<div class="fragment" />
+<div class="aahhh" />
 <br>
 
 Scala's types aren't strong enough to cover 100%,
@@ -232,7 +232,7 @@ more like 80% (?)
 
 *↑ no Scala dependencies ↑*
 
-<div class="fragment" />
+<div class="aahhh" />
 
 * ext-scalaz → Scalaz
 * ext-cats → Cats
@@ -264,7 +264,7 @@ a(
   "Hi")
 ```
 
-<div class="fragment" />
+<div class="aahhh" />
 
 I do not recommend this!
 </script></section><section  data-markdown><script type="text/template">
@@ -291,7 +291,7 @@ import japgolly.scalajs.react.vdom.html_<^._
   "Hi")
 ```
 
-<div class="fragment" />
+<div class="aahhh" />
 
 SVG too
 ```scala
@@ -384,7 +384,7 @@ object MyApp {
   </body>
 </html>
 ```
-<!-- .element: class="fragment" -->
+<!-- .element: class="aahhh" -->
 </script></section><section  data-markdown><script type="text/template">
 ## Components
 
@@ -439,7 +439,7 @@ Implicit React concept. Two uses:
 1. Contain state that doesn't affect rendering
 2. Component logic
 
-<div class="fragment" />
+<div class="aahhh" />
 
 ```scala
 ScalaComponent.builder[Props]("Name")
@@ -462,7 +462,7 @@ Full form: (Scope)(Props, Children, State) => VdomElement
 render [_] [P] [C] [S]
 ```
 
-<div class="fragment" />
+<div class="aahhh" />
 
 Example:
 ```scala
@@ -495,7 +495,7 @@ ScalaComponent.builder[Props]("Name")
 
 Call `.build` to complete.
 
-<div class="fragment" />
+<div class="aahhh" />
 
 ```scala
 ScalaComponent.builder[Int]("AmazingExpo")
@@ -506,7 +506,7 @@ ScalaComponent.builder[Int]("AmazingExpo")
 </script></section><section  data-markdown><script type="text/template">
 Steps 3a & 3b (`.backend` & `.render`) can be combined
 
-<div class="fragment" />
+<div class="aahhh" />
 
 ```scala
 ScalaComponent.builder[Int]("AmazingExpo")
@@ -607,7 +607,7 @@ A program without side-effects either:
 * calculates a value
 * loops forever
 
-<div class="fragment" />
+<div class="aahhh" />
 <br>
 
 A web site without side-effects:
@@ -663,7 +663,7 @@ final class MyBackend(<mark>bs: BackendScope[Unit, Int]</mark>) {
 
 What's the type of `.setState`?
 
-<div class="fragment" />
+<div class="aahhh" />
 
 `Callback`
 
@@ -697,7 +697,7 @@ println("HELLO!")
 * Returns the value `()`
 * Not referentially transparent
 
-<div class="fragment" />
+<div class="aahhh" />
 
 ```scala
 println("HELLO!"); println("HELLO!")
@@ -717,7 +717,7 @@ f; f
 * Type is `() => Unit`
 * Referentially transparent
 
-<div class="fragment" />
+<div class="aahhh" />
 
 ```scala
 ( ()=>println("HELLO!") , ()=>println("HELLO!") )
@@ -728,7 +728,7 @@ val f = ()=>println("HELLO!")
 (f, f)
 ```
 
-<div class="fragment" />
+<div class="aahhh" />
 
 *If* we decide to execute it later:
 ```scala
@@ -744,7 +744,7 @@ f()
 * Type is `String`
 * Referentially transparent
 
-<div class="fragment" />
+<div class="aahhh" />
 
 ```scala
 "println(\"HELLO!\")" + "println(\"HELLO!\")"
@@ -755,7 +755,7 @@ val f = "println(\"HELLO!\")"
 f + f
 ```
 
-<div class="fragment" />
+<div class="aahhh" />
 
 *If* we decide to execute it later:
 ```scala
@@ -765,16 +765,16 @@ scalac.compile(f).execute() // or whatever
 ## Benefits
 
 * Blessing of the *Holy Church of Purity and Functional Programming*
-* Just like functions as values beneficial, side-effects as values <!-- .element: class="fragment" -->
-* Describe intent <!-- .element: class="fragment" -->
-* Repeatable <!-- .element: class="fragment" -->
-* Meta-programming (retries, resource management, …) <!-- .element: class="fragment" -->
-* Ensure separation between pure logic and side-effects <!-- .element: class="fragment" -->
+* Just like functions as values beneficial, side-effects as values <!-- .element: class="aahhh" -->
+* Describe intent <!-- .element: class="aahhh" -->
+* Repeatable <!-- .element: class="aahhh" -->
+* Meta-programming (retries, resource management, …) <!-- .element: class="aahhh" -->
+* Ensure separation between pure logic and side-effects <!-- .element: class="aahhh" -->
 </script></section><section  data-markdown><script type="text/template">
 > "Ensure separation between pure logic and side-effects"
 > <div style="text-align:right; padding-right:1ex">-David Barri, <em>The Benefits of <code>Callback</code></em><br>2 sec ago</div>
 
-<div class="fragment" />
+<div class="aahhh" />
 
 1. scalajs-react asks for side-effects as `Callback`
 2. scalajs-react passes to React
@@ -825,15 +825,15 @@ def render(state: Int): VdomElement =
     <.button("Increment", ^.onClick --> inc))
 ```
 
-<div class="fragment" />
+<div class="aahhh" />
 
 In impure-world, you'd have to be careful about
 * `def`, not `val`
 * `=>A` <span style="padding:0 1.2ex">or</span> `()=>A`<span style="padding:0 1.2ex 0 0">,</span> not `A`
 * `f` <span style="padding:0 1.2ex">or</span> `f()` <span style="padding-left:2ex; font-size:70%">(`;` = `Any⇒Unit`)</span>
-* Probably more - Joyously, I don't care <!-- .element: class="fragment" -->
+* Probably more - Joyously, I don't care <!-- .element: class="aahhh" -->
 
-<div class="fragment" />
+<div class="aahhh" />
 
 ## No help from scalac
 </script></section><section  data-markdown><script type="text/template">
@@ -886,11 +886,11 @@ def loadAllUsers(ids: List[UserId]): CallbackTo[List[User]] =
 def loadUser(id: UserId): CallbackTo[User] =
   ???
 
-<span class="fragment">loadUser(UserId(123))               // CallbackTo[User]</span>
-<span class="fragment">  .logDuration(d => s"It took $d!") // CallbackTo[User]</span>
-<span class="fragment">  .attempt                          // CallbackTo[Either[Throwable, User]]</span>
-<span class="fragment">  .delayMs(100)                     // CallbackTo[Future[Either[Throwable, User]]]</span>
-<span class="fragment">  .when(true)                       // CallbackTo[Option[Future[Either[Throwable, User]]]]</span>
+<span class="aahhh">loadUser(UserId(123))               // CallbackTo[User]</span>
+<span class="aahhh">  .logDuration(d => s"It took $d!") // CallbackTo[User]</span>
+<span class="aahhh">  .attempt                          // CallbackTo[Either[Throwable, User]]</span>
+<span class="aahhh">  .delayMs(100)                     // CallbackTo[Future[Either[Throwable, User]]]</span>
+<span class="aahhh">  .when(true)                       // CallbackTo[Option[Future[Either[Throwable, User]]]]</span>
 </code></pre>
 
 Browse the source:
@@ -908,7 +908,7 @@ object State {
   def init: State = Vector.empty
 }
 ```
-<!-- .element: class="fragment" -->
+<!-- .element: class="aahhh" -->
 
 ```scala
 ScalaComponent.builder[Unit]("TodoList")
@@ -916,7 +916,7 @@ ScalaComponent.builder[Unit]("TodoList")
   .renderBackend[TodoListBackend]
   .build
 ```
-<!-- .element: class="fragment" -->
+<!-- .element: class="aahhh" -->
 
 ```scala
 final class TodoListBackend($: BackendScope[Unit, State]) {
@@ -932,7 +932,7 @@ final class TodoListBackend($: BackendScope[Unit, State]) {
       addButton)
 }
 ```
-<!-- .element: class="fragment" -->
+<!-- .element: class="aahhh" -->
 </script></section><section  data-markdown><script type="text/template">
 Let's extract a Button Component!
 
@@ -980,7 +980,7 @@ object AddButton {
 }
 </code></pre>
 
-<div class="fragment" />
+<div class="aahhh" />
 
 Let's use it:
 <pre><code class="lang-scala" data-trim data-noescape>
@@ -1025,7 +1025,7 @@ final class TodoListBackend($: BackendScope[Unit, State]) {
 </div>
 <div style="width:50%; text-align:left; padding-left:0rem">
 <h1 style="padding:0; margin:-5rem 0 0 0; font-size:1400%">NO!</h1>
-<ul style="margin-top:-5rem" class="fragment">
+<ul style="margin-top:-5rem" class="aahhh">
 <li>Tightly-coupled</li>
 <li>Testability difficult</li>
 <li>Not reusable</li>
@@ -1067,7 +1067,7 @@ object AddButton {
 }
 </code></pre>
 
-<div class="fragment" />
+<div class="aahhh" />
 
 <pre><code class="lang-scala" data-trim data-noescape>
 final class TodoListBackend($: BackendScope[Unit, State]) {
