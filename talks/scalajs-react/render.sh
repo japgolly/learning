@@ -1,9 +1,12 @@
 #!/bin/bash
 cd "$(dirname "$(readlink -e "$0")")" || exit 1
 
+t=src/.tmp.md
 d=rendered
-rm -rf $d
+rm -rf $d $t
 
-../reveal-md src/scalajs-react.md -S $d \
-  && cp src/{shipreq.svg,nim-crying.jpg,WHIRL.svg} $d/
+sed 's/fragment/aahhh/g' < src/scalajs-react.md > $t \
+  && ../reveal-md $t -S $d \
+  && cp src/{shipreq.svg,nim-crying.jpg,WHIRL.svg} $d/ \
+  && rm -f $t
 
