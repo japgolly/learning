@@ -79,33 +79,33 @@ object JsonExample {
   object Before {
     sealed trait Json
     object Json {
-      final case object Null                               extends Json
-      final case class  Bool(value: Boolean)               extends Json
-      final case class  Str (value: String)                extends Json
-      final case class  Num (value: Double)                extends Json
-      final case class  Arr (values: List[Json])           extends Json
-      final case class  Obj (fields: List[(String, Json)]) extends Json
+      case object      Null                               extends Json
+      final case class Bool(value: Boolean)               extends Json
+      final case class Str (value: String)                extends Json
+      final case class Num (value: Double)                extends Json
+      final case class Arr (values: List[Json])           extends Json
+      final case class Obj (fields: List[(String, Json)]) extends Json
     }
   }
 
   object After {
     sealed trait JsonF[+F]
     object JsonF {
-      final case object Null                              extends JsonF[Nothing]
-      final case class  Bool  (value: Boolean)            extends JsonF[Nothing]
-      final case class  Str   (value: String)             extends JsonF[Nothing]
-      final case class  Num   (value: Double)             extends JsonF[Nothing]
-      final case class  Arr[F](values: List[F])           extends JsonF[F]
-      final case class  Obj[F](fields: List[(String, F)]) extends JsonF[F]
+      case object      Null                              extends JsonF[Nothing]
+      final case class Bool  (value: Boolean)            extends JsonF[Nothing]
+      final case class Str   (value: String)             extends JsonF[Nothing]
+      final case class Num   (value: Double)             extends JsonF[Nothing]
+      final case class Arr[F](values: List[F])           extends JsonF[F]
+      final case class Obj[F](fields: List[(String, F)]) extends JsonF[F]
 
       implicit val functor: Functor[JsonF] = new Functor[JsonF] {
         override def map[A, B](fa: JsonF[A])(f: A => B): JsonF[B] = fa match {
-          case Null         => Null
-          case j: Bool      => j
-          case j: Str       => j
-          case j: Num       => j
-          case Arr (values) => Arr(values.map(f))
-          case Obj (fields) => Obj(fields.map { case (k, v) => (k, f(v)) })
+          case Null        => Null
+          case j: Bool     => j
+          case j: Str      => j
+          case j: Num      => j
+          case Arr(values) => Arr(values.map(f))
+          case Obj(fields) => Obj(fields.map { case (k, v) => (k, f(v)) })
         }
       }
 
