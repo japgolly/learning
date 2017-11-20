@@ -1,10 +1,24 @@
-Let's get started. In order to abstract out recursion, there are three things to do.
+# Practical Awesome Recursion <br> Ch 01: Fixpoints
+
+This is chapter 1 in a series of blog posts about recursion schemes.
+This series uses Scala, and will focus on usage and applicability.
+It will be scarce in theory, and abundant in examples.
+The theory is valuable and fascinating, but I often find that knowing the theory alone is only half understanding.
+The other half of understanding comes from, and enables, practical application.
+I recommend you bounce back and forth between this series and theory.
+The internet is rich with blogs and videos on theory that explain it better than I would, so use those awesome resources.
+
+## Overview
+
+The goal of this post is to prepare your data types so that you can abstrct
+over/away recursion, and be able to use all the generalisations that we'll
+explore in all future chapters in this series.
+
+In order to prepare your data, there are three things to do:
 
 1. Make the recursive positions in your data type abstract
 2. Create a `Functor` for your data type
 3. Wraps your data type in `Fix[_]`
-
-In detail:
 
 ## Step 1. Remove recursion from the data type
 
@@ -76,6 +90,10 @@ in both branches' children.
 ### JSON
 
 JSON is recursive too.
+
+JSON has arrays of JSON, it has objects with JSON values,
+those values can be arrays that contains even more objects with nested arrays and...
+you get the picture.
 
 ```scala
 // Before
@@ -303,4 +321,7 @@ object IntList {
 
 That's it! We're done.
 It may seem like a lot of work but there's benefit coming that greatly outweighs
-the cost.
+the cost. The cost isn't huge anyway, just a bit of one-time-only boilerplate.
+
+All source code available here:
+TODO
