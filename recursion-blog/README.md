@@ -11,5 +11,5 @@ The internet is rich with blogs and videos on theory that explain it better than
 
 Chapters:
 
-1. [Fixpoints]()
+1. [Fixpoints](http://japgolly.blogspot.com/2017/11/practical-awesome-recursion-ch-01.html)
 
