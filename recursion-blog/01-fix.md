@@ -1,6 +1,4 @@
-# Practical Awesome Recursion <br> Ch 01: Fixpoints
-
-This is chapter 1 in a series of blog posts about recursion schemes.
+This is chapter 1 in a [series of blog posts about recursion schemes](https://github.com/japgolly/learning/tree/public/recursion-blog).
 This series uses Scala, and will focus on usage and applicability.
 It will be scarce in theory, and abundant in examples.
 The theory is valuable and fascinating, but I often find that knowing the theory alone is only half understanding.
@@ -324,4 +322,5 @@ It may seem like a lot of work but there's benefit coming that greatly outweighs
 the cost. The cost isn't huge anyway, just a bit of one-time-only boilerplate.
 
 All source code available here:
-TODO
+https://github.com/japgolly/learning/blob/public/recursion-blog/src/main/scala/japgolly/blog/recursion/ch01.scala
+
