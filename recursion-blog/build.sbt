@@ -15,6 +15,10 @@ addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.4")
 
 libraryDependencies += "com.github.japgolly.microlibs" %% "recursion" % "1.12"
 
+enablePlugins(JmhPlugin)
+fork := true
+javaOptions ++= Seq("-server", "-Xss8M")
+
 triggeredMessage := Watched.clearWhenTriggered
 addCommandAlias("c",  "compile")
 addCommandAlias("tc", "test:compile")
