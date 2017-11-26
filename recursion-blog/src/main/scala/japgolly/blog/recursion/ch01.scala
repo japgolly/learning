@@ -28,7 +28,7 @@ object IntListExample {
     object IntList {
 
       // Helpful cos Scala's type inference fails so often
-      def apply(f: IntListF[Fix[IntListF]]): IntList =
+      def apply(f: IntListF[IntList]): IntList =
         Fix(f)
 
       def nil: IntList =
