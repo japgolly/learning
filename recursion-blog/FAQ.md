@@ -2,6 +2,7 @@
 
 ## Why don't you use Matryoshka in your sample code?
 
+A very common question. I'll explain.
 There are a few reasons.
 
 1. Recursion scheme theory was invented/discovered outside of any library.
@@ -10,7 +11,7 @@ There are a few reasons.
    them using Matryoshka or any other library -
    the only difference is syntax (eg. `blah.cata(f)` vs `Recursion.cata(blah)(f)`)
    or maybe some of the basics have different names (`Fix` vs `Mu`, `unfix` vs `embed`),
-   and you'll learn that be spending 3 minutes reading the README of the recursion
+   and you'll learn that within 3 minutes of reading the README of the recursion
    library of your choice.
 
 2. Matryoshka is very, very awesome, but shouldn't be considered gospel nor the
@@ -21,21 +22,19 @@ There are a few reasons.
    To be specific,
 
    * Code is extremely hard to read
-     * Implicit ops everywhere - quite hard to find operator definitions
+     * Implicit ops everywhere - quite hard to find operator definitions.
+       This is huge to me, over the years I've become very opposed to libraries
+       adding extension methods to everything.
      * Unicode everywhere
-     * Super generalised (which is currently a tradeoff, great for flexibility, poor for speed and readability. By specialising more one could have the best of both worlds)
-   * Slow and inefficient - some optimisations I'll present achieve over 1000x speedup
+   * Could be more efficient - some optimisations I'll present in the series achieve over 1000x speedup
    * Semantic flaws - I've discovered one already and will be raising an issue or PR.
      I expect to discover more as I go through this series and increasing my own understanding.
 
-    And because Internet can be so brutally negative:
-    Does this mean I {hate, dislike, don't respect, recommend avoiding, whatever}
-    Matryoshka? No. I've simply made some observations from my own perspective.
-    Matryoshka has a lot of awesome, and I hope that my series inspires some
-    improvements to make it even more awesome.
-    Shitting on me for observing Matryoshka, or shitting on Matryoshka because
-    of my observations makes you immature and an enemy (or at least obstructor)
-    of progress. Please don't. It's frustrating that I even have to write this.
+    Now don't get me wrong - I like Matryoshka.
+    I've simply made some observations and think we're still at a stage where
+    considering different implementations is valuable both
+    to users/projects with different value criteria, and Matryoshka itself.
+    I hope that my series inspires some improvements to make Matryoshka even more awesome.
 
 3. I want to demonstrate the definitions (implementations) of concepts when I
    introduce them. When the definition are specialised and dependency-free,
@@ -45,12 +44,13 @@ There are a few reasons.
 4. Following on from above, it also makes an important point:
    it's not infeasible or crazy to just copypaste (!) what you need.
    The definitions never change, they're very concise;
-   if you're in an environment hostile to adding new dependencies
+   if you're in an environment hostile to adding new dependencies or
+   dependencies of which your team will only comprehend and use 10%,
    you can still use recursion schemes by just copying a few lines of code.
    Literally only a few.
    `Fix` + `cata` + `ana` + `hylo` (which is boundary of what many people understand and use)
     is only 7 lines! If you want optimised versions, it's an extra 6 lines of
-    private boilerplate. That's an insanely low one-time cost to a project.
+    private boilerplate. That's an insanely low, one-time cost to a project.
 
 
 ## Which library should I use?

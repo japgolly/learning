@@ -48,6 +48,7 @@ OUTLINE
   - inverse
   - inefficient - you still have no power!
   - Use fix and simple algebras, zip for parallelism. You have the power!
+  - show low/high -level organisation (high = dsl object)
 - cata is also your map & filter
   - map
   - filter - discuss inefficiency of strict semantics

@@ -6,6 +6,7 @@ package object shared {
 
   type IntList       = Fix[IntListF]
   val  IntList       = IntListF.IntList
+  type BinaryTree[A] = Fix[BinaryTreeF[A, ?]]
   type Json          = Fix[JsonF]
   val  Json          = JsonF.Json
   type Calculator    = Fix[CalculatorF]
