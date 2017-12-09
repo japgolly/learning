@@ -1,4 +1,4 @@
-package japgolly.blog.recursion.ch02
+/*package japgolly.blog.recursion.ch02
 
 import japgolly.blog.recursion.shared._
 import japgolly.microlibs.recursion.Fix
@@ -267,6 +267,12 @@ object FileSystem {
       case a: Dir[Entry] => Entry(a)
     }
 
+    // Demonstrating Entry => Entry here instead of Algebra[EntryF, Entry]
+    val doubleFileSizes: Entry => Entry = {
+      val alg = mapFiles(f => f.copy(size = f.size * 2))
+      cata(alg)(_)
+    }
+
     // WARNING: This is Scala, not Haskell. Inefficiency exists.
     def filter(f: String => Boolean): Algebra[EntryF, Entry] = {
       case a: File => Entry(a)
@@ -278,11 +284,8 @@ object FileSystem {
       case Dir(fs) => () => Entry(Dir(fs.iterator.filter(x => f(x._1)).map(x => (x._1, x._2())).toMap))
     }
 
-    val lazyishResult: () => Entry =
-      cata(filter2(_ endsWith ".tmp"))(example)
-
-    val result: Entry =
-      lazyishResult()
+    val filterExample: Entry =
+      cata(filter2(_ endsWith ".tmp"))(example).apply()
 
     val toJson: Algebra[EntryF, Json] = {
       case File(s) => Json(JsonF.Num(s.toDouble))
@@ -293,3 +296,4 @@ object FileSystem {
 
 
 }
+*/

@@ -14,10 +14,11 @@ scalacOptions := List(
 addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.4")
 
 libraryDependencies += "com.github.japgolly.microlibs" %% "recursion" % "1.12"
+libraryDependencies += "com.slamdata" %% "matryoshka-core" % "0.21.2"
 
 enablePlugins(JmhPlugin)
 fork := true
-javaOptions ++= Seq("-server", "-Xss8M")
+javaOptions ++= Seq("-server", "-Xss20M")
 
 triggeredMessage := Watched.clearWhenTriggered
 addCommandAlias("c",  "compile")

@@ -1,4 +1,4 @@
-package japgolly.blog.recursion.ch01
+/*package japgolly.blog.recursion.ch01
 
 import japgolly.microlibs.recursion.Fix
 import scalaz.Functor
@@ -115,3 +115,4 @@ object JsonExample {
   }
 
 }
+*/

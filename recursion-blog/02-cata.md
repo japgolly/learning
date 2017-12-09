@@ -17,7 +17,7 @@ read or skim [chapter 1 of this series](https://japgolly.blogspot.com/2017/11/pr
 * `BinaryTree` / `BinaryTreeF[_]`
 
 
-This series doesn't depend on, or emphasise, Matryoshka or any other library.
+Also, this series doesn't depend on, or emphasise, Matryoshka or any other library.
 If you'd like to understand why, I've explained [here in the FAQ](TOOODOOOO).
 
 # The Catamorphism
@@ -29,9 +29,9 @@ It can be answered from a few perspectives.
 
 It's often referred to as a fold over your data structure.
 Examples that sum or count values are very common.
-An example of the concept straight of out Scala stdlib would be
+Conceptually speaking, an example using Scala stdlib would be
 `List(1, 3, 7).foldLeft(0)(_ + _) == 11`.
-As you'll see below, folds and catamorphisms are capable of much more than calculating numbers.
+As you'll see, folds and catamorphisms are capable of much more than calculating numbers.
 
 The definition of catamorphism is:
 
@@ -41,14 +41,11 @@ def cata[F[_]: Functor, A, B](fAlgebra: F[A] => A)(f: Fix[F]): A =
 ```
 
 The first argument `fAlgebra` is so-called because `F[A] => A` is known as an
-F-algebra. *What* it is, is your folding-logic function that inspects a single
+F-algebra. *What* it is, is your folding logic.
+You implement your folding logic as a function that processes a single
 level/layer of your structure without recursion.
-The `f: Fix[F]` is the data structure that you want to fold into some type `A`.
-Combine the two with this magic function and all the recursion is taken care of
-for you, and the result is just a single `A`. If you're confused, the examples
-below will clear it up.
+When I say level/layer, I mean in terms of recursive depth, example:
 
-Level? Layer? Visualise your recursive data types like this:
 ```
 IntList
 =======
@@ -78,13 +75,14 @@ Leaf      Branch(_, "right", _)     ← Level 2
 
 ### How
 
-Look at the above definition.
-There's an interesting note about parametricity. The only means it
+Look at the definition of `cata` and at the shape/type of the f-algebra.
+There's an interesting note about parametricity. The only means `cata`
 has of producing an `A` is to call `fAlgebra`... which requires an `F[A]`...
-so how do you put an `A` in the `F[_]` if you can't produce `A`s?
-Remember that the hole if `F[_]` represents the recursive case?
+so how does it put an `A` in the `F[_]` to call the function,
+if it can't produce `A`s otherwise?
+Remember that the hole in `F[_]` represents the recursive case?
 In non-recursive cases (eg. `Nil` in a cons list) the type is a phantom-type,
-completely unused, or covariant and always `Nothing`. For example:
+completely unused, or covariant and `Nothing`. For example:
 
 ```scala
 case class Eg[T](int: Int)
@@ -105,14 +103,13 @@ Catamorphisms:
 
 Which means your folding logic is going to start executing against all the leaves
 first, then their parents, then *their* parents, etc.
-(When we get to some of the more advanced morphisms, understanding the order becomes critical.)
 
 
 ### Optimisation
 
 I did say that this is a practical series.
-This is a good a place as any to mention that this definition, while correct,
-is inefficient.
+This is a good a place as any to mention that this `cata` definition,
+while correct, is inefficient.
 
 Every time it recurses it has to create the same functions with the same logic
 over and over again. We can make it more efficient by creating what we need once
@@ -160,13 +157,13 @@ because the VCPUs are slower.*
 This isn't necessary but I'm also going to add a type alias.
 
 ```scala
-type Algebra[F[_], A] = F[A] => A
+type FAlgebra[F[_], A] = F[A] => A
 ```
 
 and tweak the catamorphism definition to
 
 ```scala
-def cata2[F[_], A, B](algebra: Algebra[F, A])(f: Fix[F])(implicit F: Functor[F]): A = {
+def cata2[F[_], A, B](algebra: FAlgebra[F, A])(f: Fix[F])(implicit F: Functor[F]): A = {
   var self: Fix[F] => A = null
   self = f => algebra(F.map(f.unfix)(self))
   self(f)
@@ -177,10 +174,10 @@ Type aliases don't exist at runtime, the compilation process dealiases them comp
 You can also use either definition interchangably.
 
 ```scala
-def useAlias[F[_], A](f: F[A] => A): Algebra[F, A] =
+def useAlias[F[_], A](f: F[A] => A): FAlgebra[F, A] =
   f
 
-def removeAlias[F[_], A](f: Algebra[F, A]): F[A] => A =
+def removeAlias[F[_], A](f: FAlgebra[F, A]): F[A] => A =
   f
 ```
 
@@ -199,7 +196,7 @@ the usual `blah -> Int` stuff:
 Let's sum a list:
 
 ```scala
-val listSum: Algebra[IntListF, Int] = {
+val listSum: FAlgebra[IntListF, Int] = {
   case IntListF.Cons(h, t) => h + t
   case IntListF.Nil        => 0
 }
@@ -229,14 +226,14 @@ project or libraries, the algebra itself is the unit that you'll be exposing mos
 often. Instead of creating functions that take fixed-point data (or codata)
 structures and return a result, you create algebras and leave it to
 users to call `cata` themselves. More on this later but the point is, from the
-next example onwards, it'll just be algebras.
+next example onwards, I'll show just the algebras.
 
 ### List Length
 
 Counting elements in a list is similar:
 
 ```scala
-val listLength: Algebra[IntListF, Int] = {
+val listLength: FAlgebra[IntListF, Int] = {
   case IntListF.Cons(_, t) => 1 + t
   case IntListF.Nil        => 0
 }
@@ -259,17 +256,17 @@ val listLengthVerbose: IntListF[Int] => Int = {
 Here's a few algebras for `BinaryTree`:
 
 ```scala
-val binaryTreeNodeCount: Algebra[BinaryTreeF[Any, ?], Int] = {
+val binaryTreeNodeCount: FAlgebra[BinaryTreeF[Any, ?], Int] = {
   case BinaryTreeF.Node(left, _, right) => left + 1 + right
   case BinaryTreeF.Leaf                 => 0
 }
 
-val binaryTreeMaxDepth: Algebra[BinaryTreeF[Any, ?], Int] = {
+val binaryTreeMaxDepth: FAlgebra[BinaryTreeF[Any, ?], Int] = {
   case BinaryTreeF.Node(left, _, right) => left.max(right) + 1
   case BinaryTreeF.Leaf                 => 0
 }
 
-def binaryTreeSum[N](implicit N: Numeric[N]): Algebra[BinaryTreeF[N, ?], N] = {
+def binaryTreeSum[N](implicit N: Numeric[N]): FAlgebra[BinaryTreeF[N, ?], N] = {
   case BinaryTreeF.Node(left, n, right) => N.plus(left, N.plus(n, right))
   case BinaryTreeF.Leaf                 => N.zero
 }
@@ -280,11 +277,11 @@ computed value for that subtree.
 
 ### JSON
 
-Let's take a JSON value in our JSON ADT, and turn it into a String that we can
+Let's take a JSON value in our JSON ADT, and turn it into a JSON string that we can
 send out the door.
 
 ```scala
-val jsonToString: Algebra[JsonF, String] = {
+val jsonToString: FAlgebra[JsonF, String] = {
   case JsonF.Null        => "null"
   case JsonF.Bool(b)     => b.toString
   case JsonF.Num(n)      => n.toString
@@ -294,7 +291,7 @@ val jsonToString: Algebra[JsonF, String] = {
 }
 ```
 
-Is that easy or what? The array values and object fields are already all Strings,
+Is that easy or what? The array values and object fields are already all strings,
 we just mindlessly combine them using array/object notation.
 
 What if, instead of the slower String concatenation, we wanted to use
@@ -305,7 +302,7 @@ the function itself is immutable, referentially transparent and pure.
 Descriptions of side-effects are safe.
 
 ```scala
-val jsonToStringSB: Algebra[JsonF, StringBuilder => Unit] = {
+val jsonToStringSB: FAlgebra[JsonF, StringBuilder => Unit] = {
   case JsonF.Null        => _ append "null"
   case JsonF.Bool(b)     => _ append b.toString
   case JsonF.Num(n)      => _ append n.toString
@@ -342,7 +339,7 @@ def jsonToStringBuilderUsage(json: Json): String = {
 
 Let's look at a more interesting example: a file system.
 
-We'll start off with a typical representation with hard-coded recursion.
+We'll start with a typical representation with hard-coded recursion.
 
 ```scala
 sealed trait Entry
@@ -393,13 +390,15 @@ One day a user wants to collect a bunch of stats and writes the following code:
 ```scala
 final case class Stats(totalSize: Long, files: Int, dirs: Int)
 
-// Traverses FS 3 times! Grossly inefficient
 def stats(e: Entry): Stats =
   Stats(totalFileSize(e), countFiles(e), countDirs(e))
 ```
 
 The user then complains that their `stats` method takes 3 times as long as other
-operations. Now obviously, with the pure definitions given above, the extra time
+operations.
+This is because each stat is produced by traversing the entire file system.
+3 stats = 3 traversals.
+Now obviously, with the pure definitions given above, the extra time
 is going to be negligible but imagine it's a real file system here, maybe even one
 distributed over the network, all that drive/network/hardware cost to traverse
 the file system is likely to be very noticable and very significant when it's
@@ -410,15 +409,17 @@ issue and complain. They have no control or power in this situation.
 They're at the mercy of the decisions made by the library authors.
 
 After a few years of complaints, the authors of the super-awesome file system
-library create a new version of their API,
-and it looks a little something like this...
+library do a big rewrite and create a new API
+that looks a little something like this...
 
 ```scala
 final case class Stats(totalSize: Long, files: Int, dirs: Int)
 
 def stats(e: Entry): Stats = e match {
+
   case File(fileSize) =>
     Stats(fileSize, 1, 0)
+
   case Dir(fs) =>
     fs.values.foldLeft(Stats(0, 0, 0)) { (statsAcc, entry) =>
       val b = stats(entry)
@@ -450,12 +451,12 @@ Second, now new complaints start coming in, complaints like
 *"dirCount() 4x slower than in v1.8.3"*. What's going on?
 Well, now in every traversal we're spending more time fetching more data that
 we don't need and end up throwing away. If a user only wants a directory count,
-the library spends oodles of time looking up attributes, group IDs, etc. only
+the library spends oodles of time looking up attributes, group names, etc. only
 to discard them all at the end.
 
-What can the user do? Well... nothing. The only recourse they have is to raise an
+What can the user do? Well... again: nothing. The only recourse they have is to raise an
 issue and complain. They have no control or power in this situation.
-They're at the mercy of the decisions made by the library authors.
+They're yet again at the mercy of the decisions made by the library authors.
 
 ### Fixing our FileSystem
 
@@ -501,22 +502,22 @@ val example =
       "example.tmp" -> Entry.file(12)))
 ```
 
-Next up are the query logic.
+Next up are the queries.
 Small, reusable, independent functions are good practice for good reason;
 let's recreate what we had in the initial version:
 
 ```scala
-val totalFileSize: Algebra[EntryF, Long] = {
+val totalFileSize: FAlgebra[EntryF, Long] = {
   case File(s) => s
   case Dir(fs) => fs.values.sum
 }
 
-val countFiles: Algebra[EntryF, Int] = {
+val countFiles: FAlgebra[EntryF, Int] = {
   case File(_) => 1
   case Dir(fs) => fs.values.sum
 }
 
-val countDirs: Algebra[EntryF, Int] = {
+val countDirs: FAlgebra[EntryF, Int] = {
   case File(_) => 0
   case Dir(fs) => fs.values.sum + 1
 }
@@ -530,9 +531,9 @@ F-Algebras compose. Here's a simple, reusable snippet to combine two F-algebras
 that share the same `F`:
 
 ```scala
-def algebraZip[F[_], A, B](fa: Algebra[F, A],
-                           fb: Algebra[F, B])
-                          (implicit F: Functor[F]): Algebra[F, (A, B)] =
+def algebraZip[F[_], A, B](fa: FAlgebra[F, A],
+                           fb: FAlgebra[F, B])
+                          (implicit F: Functor[F]): FAlgebra[F, (A, B)] =
   fab => {
     val a = fa(fab.map(_._1))
     val b = fb(fab.map(_._2))
@@ -543,7 +544,7 @@ def algebraZip[F[_], A, B](fa: Algebra[F, A],
 This is all the user needs to create their own stats gathering algebra:
 
 ```scala
-val statsAlg: Algebra[EntryF, (Long, (Int, Int))] =
+val statsAlg: FAlgebra[EntryF, (Long, (Int, Int))] =
   algebraZip(totalFileSize, algebraZip(countFiles, countDirs))
 ```
 
@@ -560,24 +561,43 @@ def stats(e: Entry): Stats = {
 
 Hoorah. Without any dependencies on the library authors, our user was able to
 choose the 3 stats they were interested in, and retrieve them all in a single
-file system traversal. Whilst not parallelism, they created their own concurrency!
+file system traversal.
+Whilst not parallelism (wait for the next episode in this series),
+they've created their own concurrency!
 
-No contrast this with the previous incarnation.
+Now contrast this with the previous incarnation.
 This time around, the user has the control, the user has the power.
 Library authors don't need to decide tradeoffs for everyone.
 
-These are the advantage of providing algebras instead of higher-purpose functions.
+These are the advantages of providing algebras instead of higher-purpose functions.
 F-algebras (like `val statsAlg`) allow you to accrue power;
 that power is spent when you apply it (like `def stats`).
 
-In fact, I personally find it nice to provide two interfaces in these scenarios:
+Personally speaking, when using all this stuff in my own work projects,
+I often find it nice to provide two sets of interfaces:
 
 1. A low-level ecosystem of algebras, raw data types, logic, etc.
    Usually an entire package.
 2. A high-level DSL that very cleanly exposes common high-level functions and
-   hide all the algebra composition, calls to `cata` and other morphisms, etc.
+   hides all the algebra composition, calls to `cata` and other morphisms, etc.
    Usually a single `object`.
 
-In this FS example, only `case class Stats` and `def stats(e: Entry): Stats` would
-go in the high-level DSL.
-This especially makes a nice experience on teams with differing skill levels.
+This approach allows all devs to get the most common types of work done without
+any knowledge of recursion schemes or theory.
+They just see a small, high-level DSL that's easy to skim, understand and use.
+It also serves as a good means of teaching recursion schemes because
+devs unfamiliar with it can then click through into the lower-level code and see
+real-world examples in a domain they're familiar with.
+This makes for a nice experience on teams with differing skill levels,
+both in terms of code quality and a path to gradually up-skill the team.
+
+# To be continued...
+
+That's plenty for now.
+
+MICROLIBS MSG HERE
+
+PATREON MSG HERE
+
+All source code available here:
+https://github.com/japgolly/learning/blob/public/recursion-blog/src/main/scala/japgolly/blog/recursion/ch02.scala
