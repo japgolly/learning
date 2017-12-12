@@ -597,7 +597,11 @@ That's plenty for now.
 
 MICROLIBS MSG HERE
 
-PATREON MSG HERE
+If you like what I do and you'd like to support me, this series or any of my other projects,
+[become a patron!](https://www.patreon.com/japgolly)
+It will make a big difference and help further more content.
+You can also [follow me on Twitter](https://twitter.com/japgolly)
+for updates about the next post the series.
 
 All source code available here:
 https://github.com/japgolly/learning/blob/public/recursion-blog/src/main/scala/japgolly/blog/recursion/ch02.scala

@@ -16,10 +16,6 @@ There are a few reasons.
 
 2. Matryoshka is very, very awesome, but shouldn't be considered gospel nor the
    holy grail. Like anything, if has flaws and tradeoffs.
-   I'm actually hoping that some of the committers adopt some optimisations I'll
-   be demonstrating in this series, and apply them to Matryoshka.
-
-   To be specific,
 
    * Code is extremely hard to read
      * Implicit ops everywhere - quite hard to find operator definitions.
@@ -34,7 +30,7 @@ There are a few reasons.
     I've simply made some observations and think we're still at a stage where
     considering different implementations is valuable both
     to users/projects with different value criteria, and Matryoshka itself.
-    I hope that my series inspires some improvements to make Matryoshka even more awesome.
+    I hope that my series inspires some improvements to make Matryoshka even better.
 
 3. I want to demonstrate the definitions (implementations) of concepts when I
    introduce them. When the definition are specialised and dependency-free,
