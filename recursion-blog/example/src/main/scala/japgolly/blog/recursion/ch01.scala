@@ -1,6 +1,6 @@
-/*package japgolly.blog.recursion.ch01
+package japgolly.blog.recursion.ch01
 
-import japgolly.microlibs.recursion.Fix
+import japgolly.blog.recursion.definitions.Fix
 import scalaz.Functor
 
 object IntListExample {
@@ -26,7 +26,6 @@ object IntListExample {
     type IntList = Fix[IntListF]
 
     object IntList {
-
       // Helpful cos Scala's type inference fails so often
       def apply(f: IntListF[IntList]): IntList =
         Fix(f)
@@ -111,8 +110,6 @@ object JsonExample {
 
       type Json = Fix[JsonF]
     }
-
   }
 
 }
-*/

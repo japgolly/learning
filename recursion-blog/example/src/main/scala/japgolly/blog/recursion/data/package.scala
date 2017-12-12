@@ -1,8 +1,8 @@
 package japgolly.blog.recursion
 
-import japgolly.microlibs.recursion.Fix
+import japgolly.blog.recursion.definitions.Fix
 
-package object shared {
+package object data {
 
   type IntList       = Fix[IntListF]
   val  IntList       = IntListF.IntList

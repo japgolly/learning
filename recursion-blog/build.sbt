@@ -13,7 +13,7 @@ lazy val commonSettings = Seq[Setting[_]](
     "-Ywarn-inaccessible",
     "-feature", "-language:postfixOps", "-language:implicitConversions", "-language:higherKinds", "-language:existentials"),
 
-  addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.4"),
+  addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.5"),
 
   triggeredMessage := Watched.clearWhenTriggered) ++
   addCommandAlias("cc", ";clean;compile") ++
@@ -28,13 +28,14 @@ lazy val root = (project in file("."))
 lazy val example = project
   .settings(
     commonSettings,
-    libraryDependencies += "com.github.japgolly.microlibs" %% "recursion" % "1.12")
+    libraryDependencies += "org.scalaz" %% "scalaz-core" % "7.2.17")
 
 lazy val bench = project
   .enablePlugins(JmhPlugin)
   .dependsOn(example)
   .settings(
     commonSettings,
+    libraryDependencies += "com.github.japgolly.microlibs" %% "recursion" % "1.12",
     libraryDependencies += "com.slamdata" %% "matryoshka-core" % "0.21.2",
     fork := true,
     javaOptions ++= Seq("-server", "-Xss20M"))

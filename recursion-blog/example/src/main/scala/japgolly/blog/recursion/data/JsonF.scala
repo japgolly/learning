@@ -1,11 +1,11 @@
-package japgolly.blog.recursion.shared
+package japgolly.blog.recursion.data
 
-import japgolly.microlibs.recursion.Fix
+import japgolly.blog.recursion.definitions.Fix
 import scalaz.Functor
 
 sealed trait JsonF[+F]
-
 object JsonF {
+
   case object      Null                              extends JsonF[Nothing]
   final case class Bool  (value: Boolean)            extends JsonF[Nothing]
   final case class Str   (value: String)             extends JsonF[Nothing]

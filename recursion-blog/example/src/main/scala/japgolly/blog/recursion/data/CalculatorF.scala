@@ -1,10 +1,11 @@
-package japgolly.blog.recursion.shared
+package japgolly.blog.recursion.data
 
-import japgolly.microlibs.recursion._
+import japgolly.blog.recursion.definitions._
 import scalaz.{Applicative, Traverse}
 
 sealed trait CalculatorF[+F]
 object CalculatorF {
+
   final case class Literal(value: Double) extends CalculatorF[Nothing]
   final case class Add     [+F](l: F, r: F) extends CalculatorF[F]
   final case class Subtract[+F](l: F, r: F) extends CalculatorF[F]
@@ -30,16 +31,16 @@ object CalculatorF {
     }
   }
 
-  val plusOnes: Coalgebra[CalculatorF, Int] =
-    i => if (i < 2) Literal(i) else Add(1, i - 1)
-
-  val evalBasic: Algebra[CalculatorF, Double] = {
-    case Literal(i)     => i
-    case Add     (a, b) => a + b
-    case Subtract(a, b) => a - b
-    case Multiply(a, b) => a * b
-    case Divide  (a, b) => a / b
-  }
+//  val plusOnes: FCoalgebra[CalculatorF, Int] =
+//    i => if (i < 2) Literal(i) else Add(1, i - 1)
+//
+//  val evalBasic: FAlgebra[CalculatorF, Double] = {
+//    case Literal(i)     => i
+//    case Add     (a, b) => a + b
+//    case Subtract(a, b) => a - b
+//    case Multiply(a, b) => a * b
+//    case Divide  (a, b) => a / b
+//  }
 
   object Calculator {
     def apply(f: CalculatorF[Calculator]): Calculator =

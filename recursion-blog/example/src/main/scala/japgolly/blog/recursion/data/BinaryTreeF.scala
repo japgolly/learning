@@ -1,9 +1,10 @@
-package japgolly.blog.recursion.shared
+package japgolly.blog.recursion.data
 
 import scalaz.Functor
 
 sealed trait BinaryTreeF[+A, +F]
 object BinaryTreeF {
+
   final case class Node[+A, +F](left: F, value: A, right: F) extends BinaryTreeF[A, F]
   case object Leaf extends BinaryTreeF[Nothing, Nothing]
 

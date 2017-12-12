@@ -1,7 +1,7 @@
-package japgolly.blog.recursion.bench
+/*package japgolly.blog.recursion.bench
 
 import java.util.concurrent.TimeUnit
-import japgolly.blog.recursion.shared._
+import japgolly.blog.recursion.data._
 import japgolly.microlibs.recursion._
 import org.openjdk.jmh.annotations._
 import scalaz.Functor
@@ -53,3 +53,4 @@ class FilterBM {
   @Benchmark def filter: IntList = Recursion.cata(FilterBM.strict(cutoff))(i)
   @Benchmark def filter2: IntList = Recursion.cata(FilterBM.fn0(cutoff))(i).apply()
 }
+*/

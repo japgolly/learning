@@ -1,45 +1,12 @@
-/*package japgolly.blog.recursion.ch02
+package japgolly.blog.recursion.ch02
 
-import japgolly.blog.recursion.shared._
-import japgolly.microlibs.recursion.Fix
-import scalaz.{Functor, \/, \/-}
-
-object Definitions {
-  import scalaz.syntax.functor._
-
-  def cata[F[_] : Functor, A, B](fAlgebra: F[A] => A)(f: Fix[F]): A =
-    fAlgebra(f.unfix.map(cata(fAlgebra)))
-
-  type Algebra[F[_], A] = F[A] => A
-
-  def cata2[F[_], A, B](algebra: Algebra[F, A])(f: Fix[F])(implicit F: Functor[F]): A = {
-    var self: Fix[F] => A = null
-    self = f => algebra(F.map(f.unfix)(self))
-    self(f)
-  }
-
-  def useAlias[F[_], A](f: F[A] => A): Algebra[F, A] =
-    f
-
-  def removeAlias[F[_], A](f: Algebra[F, A]): F[A] => A =
-    f
-
-  def algebraZip[F[_], A, B](fa: Algebra[F, A],
-                             fb: Algebra[F, B])
-                            (implicit F: Functor[F]): Algebra[F, (A, B)] =
-    fab => {
-      val a = fa(fab.map(_._1))
-      val b = fb(fab.map(_._2))
-      (a, b)
-    }
-
-}
-
-import Definitions._
+import japgolly.blog.recursion.data._
+import japgolly.blog.recursion.definitions.{Fix, FAlgebra, cata, falgebraZip}
+import scalaz.Functor
 
 object BasicExamples {
 
-  val listSum: Algebra[IntListF, Int] = {
+  val listSum: FAlgebra[IntListF, Int] = {
     case IntListF.Cons(h, t) => h + t
     case IntListF.Nil        => 0
   }
@@ -55,7 +22,7 @@ object BasicExamples {
   def sumThisListPlease(list: IntList): Int =
     cata(listSum)(list)
 
-  val listLength: Algebra[IntListF, Int] = {
+  val listLength: FAlgebra[IntListF, Int] = {
     case IntListF.Cons(_, t) => 1 + t
     case IntListF.Nil        => 0
   }
@@ -68,17 +35,17 @@ object BasicExamples {
     case IntListF.Nil => 0
   }
 
-  val binaryTreeNodeCount: Algebra[BinaryTreeF[Any, ?], Int] = {
+  val binaryTreeNodeCount: FAlgebra[BinaryTreeF[Any, ?], Int] = {
     case BinaryTreeF.Node(left, _, right) => left + 1 + right
     case BinaryTreeF.Leaf                 => 0
   }
 
-  val binaryTreeMaxDepth: Algebra[BinaryTreeF[Any, ?], Int] = {
+  val binaryTreeMaxDepth: FAlgebra[BinaryTreeF[Any, ?], Int] = {
     case BinaryTreeF.Node(left, _, right) => left.max(right) + 1
     case BinaryTreeF.Leaf                 => 0
   }
 
-  def binaryTreeSum[N](implicit N: Numeric[N]): Algebra[BinaryTreeF[N, ?], N] = {
+  def binaryTreeSum[N](implicit N: Numeric[N]): FAlgebra[BinaryTreeF[N, ?], N] = {
     case BinaryTreeF.Node(left, n, right) => N.plus(left, N.plus(n, right))
     case BinaryTreeF.Leaf                 => N.zero
   }
@@ -90,7 +57,7 @@ object BasicExamples {
       case c              => c :: Nil
     }.mkString("\"", "", "\"")
 
-  val jsonToString: Algebra[JsonF, String] = {
+  val jsonToString: FAlgebra[JsonF, String] = {
     case JsonF.Null        => "null"
     case JsonF.Bool(b)     => b.toString
     case JsonF.Num(n)      => n.toString
@@ -99,7 +66,7 @@ object BasicExamples {
     case JsonF.Obj(fields) => fields.iterator.map { case (k, v) => k + ":" + v }.mkString("{", ",", "}")
   }
 
-  val jsonToStringSB: Algebra[JsonF, StringBuilder => Unit] = {
+  val jsonToStringSB: FAlgebra[JsonF, StringBuilder => Unit] = {
     case JsonF.Null        => _ append "null"
     case JsonF.Bool(b)     => _ append b.toString
     case JsonF.Num(n)      => _ append n.toString
@@ -237,23 +204,23 @@ object FileSystem {
         "tmp" -> Entry.dir(
           "example.tmp" -> Entry.file(12)))
 
-    val totalFileSize: Algebra[EntryF, Long] = {
+    val totalFileSize: FAlgebra[EntryF, Long] = {
       case File(s) => s
       case Dir(fs) => fs.values.sum
     }
 
-    val countFiles: Algebra[EntryF, Int] = {
+    val countFiles: FAlgebra[EntryF, Int] = {
       case File(_) => 1
       case Dir(fs) => fs.values.sum
     }
 
-    val countDirs: Algebra[EntryF, Int] = {
+    val countDirs: FAlgebra[EntryF, Int] = {
       case File(_) => 0
       case Dir(fs) => fs.values.sum + 1
     }
 
-    val statsAlg: Algebra[EntryF, (Long, (Int, Int))] =
-      algebraZip(totalFileSize, algebraZip(countFiles, countDirs))
+    val statsAlg: FAlgebra[EntryF, (Long, (Int, Int))] =
+      falgebraZip(totalFileSize, falgebraZip(countFiles, countDirs))
 
     final case class Stats(totalSize: Long, files: Int, dirs: Int)
 
@@ -262,38 +229,7 @@ object FileSystem {
       Stats(totalSize, files, dirs)
     }
 
-    def mapFiles(f: File => File): Algebra[EntryF, Entry] = {
-      case a: File       => Entry(f(a))
-      case a: Dir[Entry] => Entry(a)
-    }
-
-    // Demonstrating Entry => Entry here instead of Algebra[EntryF, Entry]
-    val doubleFileSizes: Entry => Entry = {
-      val alg = mapFiles(f => f.copy(size = f.size * 2))
-      cata(alg)(_)
-    }
-
-    // WARNING: This is Scala, not Haskell. Inefficiency exists.
-    def filter(f: String => Boolean): Algebra[EntryF, Entry] = {
-      case a: File => Entry(a)
-      case Dir(fs) => Entry(Dir(fs.filterKeys(f)))
-    }
-
-    def filter2(f: String => Boolean): Algebra[EntryF, () => Entry] = {
-      case a: File => () => Entry(a)
-      case Dir(fs) => () => Entry(Dir(fs.iterator.filter(x => f(x._1)).map(x => (x._1, x._2())).toMap))
-    }
-
-    val filterExample: Entry =
-      cata(filter2(_ endsWith ".tmp"))(example).apply()
-
-    val toJson: Algebra[EntryF, Json] = {
-      case File(s) => Json(JsonF.Num(s.toDouble))
-      case Dir(fs) => Json(JsonF.Obj(fs.toList))
-    }
-
   }
 
 
 }
-*/

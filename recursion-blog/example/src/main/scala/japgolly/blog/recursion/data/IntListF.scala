@@ -1,11 +1,11 @@
-package japgolly.blog.recursion.shared
+package japgolly.blog.recursion.data
 
-import japgolly.microlibs.recursion.Fix
+import japgolly.blog.recursion.definitions.Fix
 import scalaz.Functor
 
 sealed trait IntListF[+F]
-
 object IntListF {
+
   final case class Cons[+F](head: Int, tail: F) extends IntListF[F]
   case object Nil extends IntListF[Nothing]
 

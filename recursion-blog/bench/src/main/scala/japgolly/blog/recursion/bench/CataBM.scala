@@ -1,7 +1,7 @@
-package japgolly.blog.recursion.bench
+/*package japgolly.blog.recursion.bench
 
 import java.util.concurrent.TimeUnit
-import japgolly.blog.recursion.shared._
+import japgolly.blog.recursion.data._
 import japgolly.microlibs.recursion._
 import matryoshka.data.Mu
 import org.openjdk.jmh.annotations._
@@ -50,3 +50,4 @@ class CataBM {
     s2.cata(CalculatorF.evalBasic)
   }
 }
+*/
