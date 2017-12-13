@@ -13,3 +13,6 @@ Chapters:
 
 1. [Fixpoints](http://japgolly.blogspot.com/2017/11/practical-awesome-recursion-ch-01.html)
 
+
+[FAQ](FAQ.md)
+
