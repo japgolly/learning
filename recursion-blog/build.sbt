@@ -35,7 +35,7 @@ lazy val bench = project
   .dependsOn(example)
   .settings(
     commonSettings,
-    libraryDependencies += "com.github.japgolly.microlibs" %% "recursion" % "1.12",
+    libraryDependencies += "com.github.japgolly.microlibs" %% "recursion" % "1.13",
     libraryDependencies += "com.slamdata" %% "matryoshka-core" % "0.21.2",
     fork := true,
     javaOptions ++= Seq("-server", "-Xss20M"))
