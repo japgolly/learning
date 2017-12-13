@@ -53,22 +53,17 @@ There are a few reasons.
 
 Here are the libraries I know of:
 
-Attributes <-- combine pros & cons, let readers decide whether a point is -/+
+* [Matryoshka](https://github.com/slamdata/matryoshka)
+  * Very comprehensive, has nearly everything
+  * Unoptimised: usually over twice as slow as possible
+  * *Lots* of implicit extension methods
+  * Very generalised
 
-Matryoshka
-desc
-pros
-cons
+* [@japgolly's recursion micro-library](https://github.com/japgolly/microlibs-scala)
+  * Contains most common stuff but not everything. Still growing but no idea how comprehensive it will become
+  * Optimised: fastest and most memory-efficient Scala implementation I've seen
+  * Very few implicit extension methods
+  * Specialised (for performance), not much generalisation (yet)
 
-@japgolly's recursion microlib
-* Fix is "zero-cost" (i.e. has no memory overhead or allocation)
-* Operations are optimised to be around twice as fast/efficient
-* Operations specialised and so are faster than their generalised brethren
-desc
-pros
-cons
-
-emilyphi's Cata-Mu-XXX
-desc
-pros
-cons
+* [emilyphi's Cata-Mu-Fix](https://github.com/emilypi/Cata-Mu-Fix)
+  * TODO
