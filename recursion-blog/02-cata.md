@@ -18,7 +18,7 @@ read or skim [chapter 1 of this series](https://japgolly.blogspot.com/2017/11/pr
 
 
 Also, this series doesn't depend on, or emphasise, Matryoshka or any other library.
-If you'd like to understand why, I've explained [here in the FAQ](TOOODOOOO).
+If you'd like to understand why, I've explained [here in the FAQ](https://github.com/japgolly/learning/blob/public/recursion-blog/FAQ.md).
 
 # The Catamorphism
 
@@ -595,13 +595,13 @@ both in terms of code quality and a path to gradually up-skill the team.
 
 That's plenty for now.
 
-MICROLIBS MSG HERE
-
 If you like what I do and you'd like to support me, this series or any of my other projects,
 [become a patron!](https://www.patreon.com/japgolly)
 It will make a big difference and help further more content.
 You can also [follow me on Twitter](https://twitter.com/japgolly)
 for updates about the next post the series.
 
-All source code available here:
-https://github.com/japgolly/learning/blob/public/recursion-blog/src/main/scala/japgolly/blog/recursion/ch02.scala
+All source code [available here](https://github.com/japgolly/learning/tree/public/recursion-blog/example/src/main/scala/japgolly/blog/recursion).
+
+Looking for a Scala recursion scheme library?
+There's a list [in the FAQ](https://github.com/japgolly/learning/blob/public/recursion-blog/FAQ.md).
