@@ -1,6 +1,6 @@
 #!/usr/bin/bash
 
-url=https://gist.github.com/japgolly/06a1dca864feb7202376127066eccd19.js
+url=https://gist.github.com/japgolly/0bd4b3de0b86c72c8852fd30c5a6c864.js
 f=$(basename $url)
 
 dir=/tmp/${f%.js}
@@ -36,6 +36,6 @@ $(cat $css_file)
 node $bodyjs >> $output
 
 perl -pi -e 'undef $/; s/<div class="gist-meta">(?:.|\n)+?<\/div>//' $output
-perl -pi -e 's/gist/goost/g' $output
+perl -pi -e 's/(?<=[."-])gist(?=[-" 0-9{])/goost/g' $output
 
 echo "Done: $dir/$output"
