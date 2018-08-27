@@ -9,10 +9,194 @@
         <link rel="stylesheet" href="./css/theme/simple.css" id="theme">
         <link rel="stylesheet" href="./css/highlight/tomorrow-night-bright.css">
         <link rel="stylesheet" href="./css/print/paper.css" type="text/css" media="print">
-          <link rel="stylesheet" href="./_assets/style.css">
 
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
 
+        <style>
+.reveal h1 {margin-bottom: 0.7em}
+.reveal h2 {margin-bottom: 0.7em; font-weight: bold}
+.reveal h3 {margin-bottom: 0.7em; font-weight: bold}
+.reveal li {margin-bottom: 0.1em}
+#off .reveal li li:first-child {margin-top: 0.5em}
+
+#off .reveal code:not(.hljs) { font-size: 80%; background:#e9e9e9; padding:0.2ex 0.5ex; border-radius: 4px}
+
+.reveal .header-highlight {
+  font-weight:bold;
+  color:#800;
+}
+
+.reveal .aboutme {
+  display:flex;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+  color: #3a3a3a;
+}
+.reveal .aboutme .name {
+  color: #000;
+}
+.reveal .aboutme .img {
+  height: 42vh;
+}
+.reveal .aboutme .img img {
+  display: block;
+  height: 100%;
+  width: auto;
+  border: none;
+  box-shadow: none;
+}
+.reveal .aboutme .social {
+  display:inline-block;
+  text-align:left;
+}
+.reveal .aboutme .social span {
+  padding-left: 1ex;
+  font-size: 80%;
+}
+.reveal .aboutme .oss {
+  font-size: 70%;
+  line-height: 1.4em;
+}
+
+.reveal .myprojects {
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+  align-items: center;
+}
+.reveal section .myprojects img {
+  width: auto;
+  height: 20vh;
+  border: none;
+  margin: 0;
+  background: none;
+  box-shadow: none;
+  margin: none;
+}
+
+.reveal .type-theory {
+  display: inline-block;
+  text-align: left;
+  width: 39ex;
+}
+
+.reveal .oldterm {
+  opacity: 0.25;
+  text-decoration: line-through;
+  margin-right: 1ex;
+}
+
+.reveal .termvar {
+  margin-top:3em;
+  width:61ex;
+}
+
+.reveal .centre {
+  margin-left: auto;
+  margin-right: auto;
+}
+.reveal div.centre {
+  display: inline-block;
+  text-align: left;
+}
+.reveal pre.centre {
+  display: inline;
+  box-shadow: none;
+}
+.reveal pre.centre > code {
+  display: inline-block;
+  padding: 1ex;
+}
+
+.reveal .e-criteria {
+  display: inline-flex;
+}
+.reveal .e-criteria ol {
+  margin-left: 1.9em;
+}
+
+.reveal .vdomTrees {
+  display:flex;
+  justify-content: center;
+}
+.reveal .vdomTrees pre {
+  font-size:33%;
+  display:inline-block;
+  width:auto;
+  padding: 1em;
+}
+.reveal .vdomTrees pre span:not(.good):not(.bad) {
+  color: #f00;
+}
+.reveal .vdomTrees pre span.bad {
+  background:#f00;
+   color:#fff;
+   font-weight: bold;
+}
+.reveal .vdomTrees pre span.good {
+  color: #040;
+  background-color: #8f8;
+}
+.reveal .vdomTrees .gap {
+  width: 5rem;
+}
+
+.reveal .inline-pre {
+  font-family: monospace;
+  font-size: 80%;
+  background: #ddd;
+}
+
+.reveal .thanks {
+  display:inline-grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+}
+.reveal .thanks .slides-link {
+  grid-row: 1;
+  grid-column: 1/3;
+  padding-top: 1em;
+  padding-bottom: 2em;
+}
+.reveal .thanks .github {
+  grid-row: 2;
+  grid-column: 1;
+  text-align: left;
+}
+.reveal .thanks .twitter {
+  grid-row: 2;
+  grid-column: 2;
+  text-align: right;
+}
+.reveal .thanks .social {
+  color: #444;
+}
+.reveal .thanks .social span {
+  padding-left: 0.5ex;
+  font-size: 90%;
+}
+.reveal .slides-link .github a {
+  color: #096df3aa;
+}
+.reveal .slides-link .learning {
+  color: #096df3;
+  font-weight: bold;
+}
+
+.reveal .type-member {
+  display:inline-grid;
+  grid-template: auto auto auto auto / 50% 50%;
+  grid-gap: 1em 3em;
+  text-align: left;
+}
+.reveal .type-member pre {
+  margin: 0;
+  width: 26ex;
+}
+.reveal .wrong { color:red }
+
+        </style>
 
     </head>
     <body>
