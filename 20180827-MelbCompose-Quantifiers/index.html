@@ -1,0 +1,1046 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+        <title>Quantifiers in Programming</title>
+        <link rel="stylesheet" href="./css/reveal.css">
+        <link rel="stylesheet" href="./css/theme/simple.css" id="theme">
+        <link rel="stylesheet" href="./css/highlight/tomorrow-night-bright.css">
+        <link rel="stylesheet" href="./css/print/paper.css" type="text/css" media="print">
+          <link rel="stylesheet" href="./_assets/style.css">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.2.0/css/all.css" integrity="sha384-hWVjflwFxL6sNzntih27bfxkr27PmbbK/iSvJ+a4+0owXq79v+lsFkW54bOGbiDQ" crossorigin="anonymous">
+
+
+    </head>
+    <body>
+
+        <div class="reveal">
+            <div class="slides"><section  data-markdown><script type="text/template">
+# Quantifiers in Programming
+</script></section><section  data-markdown><script type="text/template"><div class=aboutme>
+<div>
+
+<span class=name>David Barri</span>
+
+<div class=img><img src=goose-hi.jpg /></div>
+
+<div class=social>
+<i class="fab fa-github-square" ></i><span class=brandme>japgolly</span><br>
+<i class="fab fa-twitter-square"></i><span class=brandme>@japgolly</span>
+</div>
+
+</div>
+<div class=oss>
+  <ul>
+  <li>Nyaya</li>
+  <li>Scala Clear Config</li>
+  <li>Scala Microlibs</li>
+  <li>Scala Test-State</li>
+  <li>ScalaCSS</li>
+  <li>scalajs-benchmark</li>
+  <li>scalajs-react</li>
+  <li>UnivEq</li>
+  <li>webtamp</li>
+  </ul>
+</div></div>
+</script></section><section  data-markdown><script type="text/template">Past 6 years = Scala & FP exclusively
+
+<div style="margin:3rem; color:#ff00aa54">
+<i class="far fa-heart"></i> <i class="far fa-heart"></i> <i class="far fa-heart"></i>
+</div>
+
+<div class=myprojects>
+<div class=me><img style="margin:none" src=shipreq.svg /></div>
+<div class=sm><img style="margin:none" src=simple_machines.svg /></div>
+</div>
+
+</script></section><section  data-markdown><script type="text/template">## Structure
+
+* What are Quantifiers
+* Quantifiers in Programming
+* Examples
+* Summary
+</script></section><section  data-markdown><script type="text/template">_all code is Scala_
+</script></section><section  data-markdown><script type="text/template"># <span class=header-highlight>What are</span> <br/> Quantifiers?
+</script></section><section  data-markdown><script type="text/template"><div class=centre style="max-width: 35ex; line-height: 1.75em; font-size: 120%; text-align:center">
+Quantifiers are _"words, expressions or phrases that indicate the number of elements that a statement pertains to"_
+</div>
+
+<div class=fragment style="margin-top:2em; font-weight:bold">quantity</div>
+</div>
+</script></section><section  data-markdown><script type="text/template"><div style="text-align:right; display:inline-block; line-height:1.5em">
+<span style="color:hsl(286, 100%, 50%)">some</span> people<br>
+<span style="color:hsl(203, 100%, 50%)">all </span> people<br>
+<span style="color:hsl(126, 27%, 50%)">no  </span> people<br>
+<span style="color:hsl(36, 70%, 50%)">most</span> people
+</div>
+</script></section><section  data-markdown><script type="text/template"># ∀
+</script></section><section  data-markdown><script type="text/template"><div style="font-weight:bold; margin-bottom:1em">
+<span style="color:hsl(286, 100%, 50%)">∀</span>x <span style="color:hsl(203, 100%, 50%)">P</span>(x) <span style="color:hsl(36, 70%, 50%)">→</span> <span style="color:hsl(126, 27%, 50%)">Q</span>(x)
+</div>
+
+* <!-- .element: class="fragment" --> <span style="color:hsl(286, 100%, 50%)">∀ = "for all"</span>
+* <!-- .element: class="fragment" --> x = individual element
+* <!-- .element: class="fragment" --> <span style="color:hsl(203, 100%, 50%)">P = Set of Bob's friends</span>
+* <!-- .element: class="fragment" --> <span style="color:hsl(203, 100%, 50%)">P(a) = a ∈ P = a is Bob's friend</span>
+* <!-- .element: class="fragment" --> <span style="color:hsl(36, 70%, 50%)">→ = implies = "if a then b (else true)"</span>
+* <!-- .element: class="fragment" --> <span style="color:hsl(126, 27%, 50%)">Q = Set of people with beards</span>
+* <!-- .element: class="fragment" --> <span style="color:hsl(126, 27%, 50%)">Q(a) = a ∈ Q = a has a beard</span>
+
+_"<span style="color:hsl(286, 100%, 50%)">each</span> thing <span style="color:hsl(36, 70%, 50%)">that's</span> a <span style="color:hsl(203, 100%, 50%)">friend of Bob's</span> <span style="color:hsl(126, 27%, 50%)">has a beard</span>"_ <!-- .element: class="fragment" -->
+
+_"<span style="color:hsl(286, 100%, 50%)">all</span> of <span style="color:hsl(203, 100%, 50%)">Bob's friends</span> <span style="color:hsl(126, 27%, 50%)">have beards</span>"_ <!-- .element: class="fragment" -->
+</script></section><section  data-markdown><script type="text/template"># ∃
+</script></section><section  data-markdown><script type="text/template"><div style="font-weight:bold; margin-bottom:1em">
+<span style="color:hsl(286, 100%, 50%)">∃</span>x <span style="color:hsl(203, 100%, 50%)">P</span>(x) <span style="color:hsl(36, 70%, 50%)">∧</span> <span style="color:hsl(126, 27%, 50%)">Q</span>(x)
+</div>
+
+<ul style="width:30ex">
+<li class=fragment><span style="color:hsl(286, 100%, 50%)">∃ = "there exists"</span></li>
+<li class=fragment>x = individual element</li>
+<li class=fragment><span style="color:hsl(203, 100%, 50%)">P = Set of Bob's friends</span></li>
+<li class=fragment><span style="color:hsl(36, 70%, 50%)">∧ = conjunction = "a and b"</span></li>
+<li class=fragment><span style="color:hsl(126, 27%, 50%)">Q = Set of people with beards</span></li>
+</ul>
+
+_"<span style="color:hsl(286, 100%, 50%)">a</span> thing <span style="color:hsl(286, 100%, 50%)">exists</span> that's a <span style="color:hsl(203, 100%, 50%)">friend of Bob's</span> <span style="color:hsl(36, 70%, 50%)">and</span> <span style="color:hsl(126, 27%, 50%)">has a beard</span>"_ <!-- .element: class="fragment" -->
+
+_"<span style="color:hsl(286, 100%, 50%)">(at least) one</span> of <span style="color:hsl(203, 100%, 50%)">Bob's friends</span> <span style="color:hsl(126, 27%, 50%)">has a beard</span>"_ <!-- .element: class="fragment" -->
+</script></section><section  data-markdown><script type="text/template"><div class="e-criteria">
+<div>Two criteria:</div>
+<div><ol>
+<li>At least one</li>
+<li>Value unknown</li>
+</ol></div>
+</div>
+<br>
+<br>
+
+<div class=centre>
+
+<span style="margin-right:0.4ex; font-weight:bold; color:#0a0">🗸</span> _one of Bob's friends has a beard_
+<br>
+<span style="margin-right:0.4ex; font-weight:bold; color:#a00">✗</span> _Emma is Bob's friend and has a beard_
+</div>
+
+</script></section><section  data-markdown><script type="text/template">### Order Matters
+
+<div class=centre>
+
+<div style="margin-bottom:0.8em; color:#777">
+P(x,y) — y is parent of x
+</div>
+
+<span style="margin-right:1ex; font-weight:bold; color:#0a0">🗸</span> <span style="color:hsl(286, 100%, 50%)">∀x</span><span style="color:hsl(203, 100%, 50%)">∃y</span> P(<span style="color:hsl(286, 100%, 50%)">x</span>,<span style="color:hsl(203, 100%, 50%)">y</span>) — <span style="color:hsl(286, 100%, 50%)">everyone</span> has <span style="color:hsl(203, 100%, 50%)">some</span> parent
+<br>
+<span style="margin-right:1ex; font-weight:bold; color:#a00">✗</span> <span style="color:hsl(203, 100%, 50%)">∃y</span><span style="color:hsl(286, 100%, 50%)">∀x</span> P(<span style="color:hsl(286, 100%, 50%)">x</span>,<span style="color:hsl(203, 100%, 50%)">y</span>) — <span style="color:hsl(203, 100%, 50%)">someone</span> is <span style="color:hsl(286, 100%, 50%)">everyone</span>'s parent
+</div>
+</script></section><section  data-markdown><script type="text/template"># Quantifiers in <span class=header-highlight>Programming</span>
+</script></section><section  data-markdown><script type="text/template"><span style="color:hsl(286, 100%, 50%)">∀</span>x <span style="color:hsl(203, 100%, 50%)">P(x)</span> → <span style="color:hsl(126, 27%, 50%)">Q(x)</span>
+
+<br>
+
+<div class=type-theory>
+<span style="color:hsl(286, 100%, 50%)">quantifier</span>
+<br>
+individual
+<br>
+<span style="color:hsl(203, 100%, 50%)">predicate (set/relation)</span>
+<br>
+<span style="color:hsl(126, 27%, 50%)">predicate (set/relation)</span>
+</div>
+</script></section><section  data-markdown><script type="text/template"><span style="color:hsl(286, 100%, 50%)">∀</span>x:<span style="color:hsl(203, 100%, 50%)">P</span>. <span style="color:hsl(126, 27%, 50%)">Q(x)</span>
+
+<br>
+
+<div class=type-theory>
+<span style="color:hsl(286, 100%, 50%)">quantifier</span>
+<br>
+individual
+<br>
+<span style="color:hsl(203, 100%, 50%)"><span class=oldterm>predicate(set/relation)</span> type</span>
+<br>
+<span style="color:hsl(126, 27%, 50%)">predicate (set/relation)</span>
+</div>
+</script></section><section  data-markdown><script type="text/template"><span style="color:hsl(286, 100%, 50%)">∀</span>x:<span style="color:hsl(203, 100%, 50%)">P</span>. <span style="color:hsl(126, 27%, 50%)">Q(x)</span>
+
+<br>
+
+<div class=type-theory>
+<span style="color:hsl(286, 100%, 50%)">quantifier</span>
+<br>
+<span class=oldterm>individual</span> term: inhabitant / value / instance
+<br>
+<span style="color:hsl(203, 100%, 50%)"><span class=oldterm>predicate(set/relation)</span> type</span>
+<br>
+<span style="color:hsl(126, 27%, 50%)">predicate (set/relation)</span>
+</div>
+</script></section><section  data-markdown><script type="text/template">### let's start looking at code
+
+terms
+</script></section><section  data-markdown><script type="text/template">
+<pre class=centre><code class="lang-scala hljs" data-trim>
+def weetbix(a: Int, b: String): Boolean
+</code></pre>
+<br>
+
+<div style="text-align:right; display:inline-block; line-height:2em">
+<div class=fragment>weetbix(a,b) → c</div>
+<div class=fragment><span style="color:hsl(203, 100%, 50%)">∀a:Int. ∀b:String.</span> <span style="visibility:hidden">∃c:Boolean.</span> weetbix(<span style="color:hsl(203, 100%, 50%)">a</span>,<span style="color:hsl(203, 100%, 50%)">b</span>) → c</div>
+<div class=fragment><span style="color:hsl(203, 100%, 50%)">∀a:Int. ∀b:String.</span> <span style="color:hsl(36, 70%, 50%)">∃c:Boolean.</span> weetbix(<span style="color:hsl(203, 100%, 50%)">a</span>,<span style="color:hsl(203, 100%, 50%)">b</span>) → <span style="color:hsl(36, 70%, 50%)">c</span></div>
+</div>
+</script></section><section  data-markdown><script type="text/template">term-level quantifiers and variance
+
+<pre class=termvar><code class="lang-scala hljs">def weetbix(a: Int, b: String):   Boolean
+
+           (   Int,    String) => Boolean
+               -       -          +
+               ∀       ∀          ∃
+</code></pre>
+</script></section><section  data-markdown><script type="text/template">### quantifiers at type-level
+</script></section><section  data-markdown><script type="text/template"><pre class=centre><code class="lang-scala hljs" data-trim>
+def weetbix(a: Int, b: String): Boolean
+</code></pre>
+
+`(Int ∧ String)→Boolean`
+
+<span class=fragment style="color:#777">no quantifiers</span>
+</script></section><section  data-markdown><script type="text/template">type-level forall, accepts any type
+
+`∀A. A→A`
+
+<pre class="fragment centre"><code class="lang-scala hljs" data-trim>
+def id[A](a: A): A
+</code></pre>
+
+<br>
+<div class="fragment" />
+
+`∀A.∀B. A∧(A→B)→B`
+
+<pre class=centre><code class="lang-scala hljs" data-trim>
+def ap[A,B]: (A, A => B) => B
+</code></pre>
+</script></section><section  data-markdown><script type="text/template">### What about ∃ ?
+
+<br>
+
+<div class="e-criteria fragment">
+<div>Two criteria:</div>
+<div><ol>
+<li>At least one</li>
+<li>Value unknown</li>
+</ol></div>
+</div>
+
+<br>
+<div class="fragment" />
+
+<pre class=centre><code class="lang-scala hljs" data-trim>
+type A
+</code></pre>
+</script></section><section  data-markdown><script type="text/template">
+<div class=type-member>
+<div style="grid-row:1; grid-column:1" class=fragment data-fragment-index=3>
+  <strong>Existential type</strong>
+</div>
+<div style="grid-row:1; grid-column:2" class=fragment data-fragment-index=3>
+  <strong>Type alias</strong>
+</div>
+<div style="grid-row:2; grid-column:1;">
+    <pre><code class="lang-scala hljs" data-trim>
+    trait T {
+      type A
+      val a: A
+    }
+    </code></pre>
+</div>
+<div style="grid-row:2; grid-column:2;">
+    <pre><code class="lang-scala hljs" data-trim>
+    trait T {
+      type A = Int
+      val a: A
+    }
+    </code></pre>
+</div>
+<div style="grid-row:3; grid-column:1;" class=fragment data-fragment-index=1>
+    <pre><code class="lang-scala hljs" data-trim>
+    (t:T) => t.a + 9000
+    </code></pre>
+</div>
+<div style="grid-row:3; grid-column:2;" class=fragment data-fragment-index=1>
+    <pre><code class="lang-scala hljs" data-trim>
+    (t:T) => t.a + 9000
+    </code></pre>
+</div>
+<div style="grid-row:4; grid-column:1" class=fragment data-fragment-index=2>
+  Doesn't compile
+</div>
+<div style="grid-row:4; grid-column:2" class=fragment data-fragment-index=2>
+  Compiles
+</div>
+</div>
+</script></section><section  data-markdown><script type="text/template">### terms & types
+
+<pre class=centre><code class="lang-scala hljs" data-trim>
+def id[A](x: A): A
+</code></pre>
+
+`∀A. ∀x:A. ∃y:A. id(x)→y`
+</script></section><section  data-markdown><script type="text/template"># <span class=header-highlight> Examples
+
+1. Universal quantification
+2. Existential quantification
+3. Combination
+</script></section><section  data-markdown><script type="text/template">## ∀
+
+Already very common.
+
+```scala
+def find[A](as: List[A])(f: A => Boolean): Option[A]
+
+def once[A](a: => A): () => A
+
+def show[A: Show](a: A): String
+
+def traverse[G[_]: Applicative, A, B](t: Trie[A])(f: A => G[B]): G[Trie[B]]
+
+def init[F[_]: Monad, A](a: A): F[Ready[A]]
+```
+
+For more, search on Google and YouTube for
+
+* <span style="color:hsl(126, 27%, 50%)">_parametric polymorphism_</span>
+* <span style="color:hsl(126, 27%, 50%)">_ad-hoc polymorphism_</span>
+* <span style="color:hsl(126, 27%, 50%)">_parametricity_</span>
+</script></section><section  data-markdown><script type="text/template">## ∃
+
+Existential quantification is great...
+<br>
+
+<ul class=fragment>
+<li><p>when you're describing things with details that</p>
+  <ul>
+    <li>don't always matter</li>
+    <li>you want to hide</li>
+  </ul>
+</li>
+<li class=fragment><p>for having a two views of the same data</p>
+  <ul>
+    <li>high-level, low-resolution</li>
+    <li>low-level, high-resolution</li>
+  </ul>
+</li>
+</ul>
+</script></section><section  data-markdown><script type="text/template">In this contrived example...
+
+<br>
+
+* model a bunch of cases
+* usually use cases generically
+* sometimes use certain cases specifically
+</script></section><section  data-markdown><script type="text/template">Survey / Questionaire app
+
+<pre style="margin-top:3em; text-align:center">
+
+Survey   --->   Question   --->   Answer
+
+</pre>
+</script></section><section  data-markdown><script type="text/template"><pre class=centre><code class="lang-scala hljs" data-trim>
+trait Question { type Answer }
+</code></pre>
+<br>
+<br>
+
+Profound.
+</script></section><section  data-markdown><script type="text/template">```scala
+trait SurveyType {
+  type Question
+  type Answer
+}
+```
+
+<div class="fragment" />
+
+```scala
+object FreeText extends SurveyType {
+  override type Question = String
+  override type Answer   = String
+}
+
+object MultipleChoice extends SurveyType {
+  override type Question = (String, NonEmptyList[String])
+  override type Answer   = Int
+}
+```
+</script></section><section  data-markdown><script type="text/template">First use case: Survey JSON
+
+```scala
+trait SurveyType {
+  type Question
+  type Answer
+
+  val questionToJson: Question => Json
+  val questionFromJson: Json => Json.ParseResult[Question]
+}
+```
+</script></section><section  data-markdown><script type="text/template">```scala
+object FreeText extends SurveyType {
+  override type Question        = String
+  override type Answer          = String
+  override val questionToJson   = Json.Str
+  override val questionFromJson = _.stringValue
+}
+```
+</script></section><section  data-markdown><script type="text/template">```scala
+object MultipleChoice extends SurveyType {
+  override type Question = (String, NonEmptyList[String])
+  override type Answer   = Int
+
+  override val questionToJson = { case (question, choices) =>
+    Json.Object(List(
+      "question" -> Json.Str(question),
+      "choices"  -> Json.Array(choices.toList.map(Json.Str))))
+  }
+
+  override val questionFromJson = (j: Json) => for {
+    q  <- j.get("question").flatMap(_.stringValue)
+    cj <- j.get("choices").flatMap(_.nonEmptyList)
+    c  <- cj.traverse(_.stringValue)
+  } yield (q, c)
+```
+</script></section><section  data-markdown><script type="text/template">Let's create a survey!
+
+```json
+[
+  "What's your name?",
+  {
+    "question": "How many fingers do you have?",
+    "choices" : ["≤10", "≤20", "≥20", "none of them", "all of them"]
+  },
+  "Why is progressive metal the best musical genre?"
+]
+```
+
+Problem...
+</script></section><section  data-markdown><script type="text/template">```scala
+object GoogleSurveys extends SurveyType {
+  override type Question = String
+  override type Answer   = String
+}
+```
+
+```json
+[
+  "What's your name?",
+  "ac62109c-f322-4374-9b6b-3583284bb99f",
+  "Why is progressive metal the best musical genre?"
+]
+```
+</script></section><section  data-markdown><script type="text/template">```scala
+trait SurveyType {
+  val jsonTypeId: String
+}
+
+object FreeText extends SurveyType {
+  override val jsonTypeId = "text"
+}
+
+object MultipleChoice extends SurveyType {
+  override val jsonTypeId = "multiple-choice"
+}
+
+object GoogleSurveys extends SurveyType {
+  override val jsonTypeId = "google-surveys"
+}
+```
+</script></section><section  data-markdown><script type="text/template">Generic (no reflection/magic)
+
+```json
+[
+  {"text": "What's your name?"},
+  {"multiple-choice": {
+    "question": "How many fingers do you have?",
+    "choices" : ["≤10", "≤20", "≥20", "none of them", "all of them"] }
+  },
+  {"google-surveys": "ac62109c-f322-4374-9b6b-3583284bb99f"},
+  {"text": "Why is progressive metal the best musical genre?"}
+]
+```
+
+Specific
+```json
+"What's your name?"
+```
+</script></section><section  data-markdown><script type="text/template">* <span style="font-weight:bold; color:#0a0">🗸</span> to JSON
+* <span style="font-weight:bold; color:#0a0">🗸</span> from JSON
+* <span style="font-weight:bold; color:#f80">?</span> survey type
+
+<br>
+
+<pre class=centre><code class="lang-scala hljs" data-trim>
+type Survey = List[ /*Question*/ ]
+</code></pre>
+</script></section><section  data-markdown><script type="text/template"><pre class=centre><code class="lang-scala hljs" data-trim>
+// Specific is easy
+List[FreeText.Question]
+List[MultipleChoice.Question]
+
+// Generic?
+List[SurveyType.Question] // doesn't compile
+List[SurveyType#Question] // == List[Any] == useless
+</code></pre>
+</script></section><section  data-markdown><script type="text/template">### Forget code for a second; consider...
+<br><br>
+_"The answer is 10."_
+<br><br>
+<span style="font-weight:bold; color:#a00">✗</span> Useless
+</script></section><section  data-markdown><script type="text/template">_"The question is 'how many fingers do I have'<br>and the answer is 10."_
+<br><br>
+<span style="font-weight:bold; color:#0a0">🗸</span> Useful
+</script></section><section  data-markdown><script type="text/template">### When talking to the compiler...
+
+<br>
+_The question is "abc" of type String._
+
+<span style="font-weight:bold; color:#a00">✗</span> Useless
+
+<div class="fragment" />
+<br>
+<br>
+<div class=centre>
+Could be FreeText question...
+<br>Could be a GoogleSurveys ID...
+</div>
+
+</script></section><section  data-markdown><script type="text/template">_The SurveyType is FreeText and the question is "abc"._
+
+<span style="font-weight:bold; color:#0a0">🗸</span> Useful
+
+</script></section><section  data-markdown><script type="text/template">### Maintain the correspondence...
+<br>
+
+<pre class=centre><code class="lang-scala hljs" data-trim>
+object SurveyType {
+  trait AndQuestion {
+    val surveyType: SurveyType // ← evidence that this is useful
+    val question: surveyType.Question
+  }
+}
+</code></pre>
+
+<br>
+
+<pre class="centre fragment"><code class="lang-scala hljs" data-trim>
+type Survey = List[SurveyType.AndQuestion]
+</code></pre>
+</script></section><section  data-markdown><script type="text/template">```scala
+trait SurveyType { self =>
+
+  // Type alias
+  final type AndQuestion = SurveyType.AndQuestion { val surveyType: self.type }
+
+  // Instance creation
+  final def AndQuestion(q: Question): self.AndQuestion =
+    new SurveyType.AndQuestion {
+      override val surveyType: self.type = self
+      override val question = q
+    }
+}
+```
+<br>
+<pre class=fragment><code class="lang-scala hljs" data-trim>
+val specific: FreeText.AndQuestion =
+  FreeText.AndQuestion("What's your name?")
+
+val generic: SurveyType.AndQuestion =
+  specific
+</code></pre>
+</script></section><section  data-markdown><script type="text/template">### use case complete
+
+* <span style="font-weight:bold; color:#0a0">🗸</span> to JSON
+* <span style="font-weight:bold; color:#0a0">🗸</span> from JSON
+* <span style="font-weight:bold; color:#0a0">🗸</span> survey type
+</script></section><section  data-markdown><script type="text/template">### Second use case: survey execution
+
+Goals
+1. ask user questions
+1. create a big JSON with each Q & A
+</script></section><section  data-markdown><script type="text/template">Add functions
+
+```scala
+trait SurveyType {
+
+  val answerToJson: Answer => Json
+  val answerFromJson: Json => Json.ParseResult[Answer]
+
+  val askUser: Question => IO[Answer]
+}
+```
+</script></section><section  data-markdown><script type="text/template">Convenience
+<pre class=centre><code class="lang-scala hljs" data-trim>
+object SurveyType {
+  trait AndQuestion {
+    val surveyType: SurveyType
+    val question: surveyType.Question
+
+    // Convenience ↓
+
+    final type Answer = surveyType.Answer
+
+    final def askUser: IO[Answer] =
+      surveyType.askUser(question)
+  }
+}
+</code></pre>
+</script></section><section  data-markdown><script type="text/template">Q&A JSON
+
+```json
+{
+  "type"     : "text",
+  "question" : "What's your name?",
+  "answer"   : "Felisin Paran"
+}
+```
+```scala
+def qaJson(q: SurveyType.AndQuestion)(a: q.Answer): Json
+```
+</script></section><section  data-markdown><script type="text/template">Done
+
+```scala
+type Survey = List[SurveyType.AndQuestion]
+
+def executeSurvey(s: Survey): IO[Json.Array] =
+  s.traverse(q => q.askUser.map(qaJson(q))).map(Json.Array)
+```
+</script></section><section  data-markdown><script type="text/template">### Generic use works well
+* Question types unknown, irrelevant
+* Answer types unknown, irrelevant
+* Full type-safety - ST / Q / A correspondence
+* Full type-safety - no casting or coercion
+</script></section><section  data-markdown><script type="text/template">### Specific use
+
+Boss demands you create a welcome app.
+
+* Ask users their name
+* Ask users their age range
+* Compose answers according to specific rule
+</script></section><section  data-markdown><script type="text/template">```scala
+val welcomePage: IO[Unit] = {
+  val q1 = FreeText.AndQuestion("What's your name?")
+
+  val ageRanges = NonEmptyList("0-30", "31-60", "61+")
+  val q2 = MultipleChoice.AndQuestion(("How old are you?", ageRanges))
+
+  for {
+    name     <- q1.askUser
+    ageIndex <- q2.askUser
+    ageRange  = ageRanges(ageIndex)
+    _        <- IO(println(s"Hello $name, you are $ageRange years old."))
+  } yield ()
+}
+```
+</script></section><section  data-markdown><script type="text/template">### Specific use works well
+* Free text Q/A types exactly as expected, and specific
+* Multiple choice Q/A types exactly as expected, and specific
+* Full type-safety - no casting or coercion
+</script></section><section  data-markdown><script type="text/template">Code available @
+<div class=slides-link><span class=github>https://github.com/japgolly/</span><span class=learning>learning</span></div>
+</script></section><section  data-markdown><script type="text/template">## Combination Example
+
+scalajs-react
+</script></section><section  data-markdown><script type="text/template">### React
+
+A JavaScript library for building user interfaces
+
+https://reactjs.org
+</script></section><section  data-markdown><script type="text/template">### scalajs-react
+
+Use React in Scala.JS<br>in a type-safe, functional manner
+
+https://github.com/japgolly/scalajs-react
+</script></section><section  data-markdown><script type="text/template">### React is FP
+
+```scala
+trait Component[P] {
+  val render: P => VDOM
+}
+```
+<div style="margin-top:1em; opacity:0.3; font-size:70%">_(not the real scalajs-react syntax)_</div>
+</script></section><section  data-markdown><script type="text/template">
+Props
+```scala
+case class Person(firstName: String,
+                  lastName : String)
+```
+
+Pure <span class=inline-pre style="margin-left:1ex">Props→VDOM</span>
+```scala
+def render(p: Person) =
+  <.table(
+    <.tbody(
+      <.tr(<.th("First name"), <.td(p.firstName)),
+      <.tr(<.th("Last name"), <.td(p.lastName))))
+```
+
+Sample output
+```html
+<table><tbody>
+  <tr><th>First Name</th><td>Felisin</td></tr>
+  <tr><th>Last Name</th><td>Paran</td></tr>
+</tbody></table>
+```
+</script></section><section  data-markdown><script type="text/template">### Performance Optimisation
+<pre class=centre><code class="lang-scala hljs" data-trim>
+shouldComponentUpdate: (P, P) => Boolean
+</code></pre>
+
+<br>
+
+* Just before calling <span class=inline-pre>render</span>
+* Compare previous & next props
+* Potentially opt-out of update
+</script></section><section  data-markdown><script type="text/template">### Typically...
+
+No change in props → don't update the component
+
+<br>
+
+```js
+// JS
+function shouldComponentUpdate(prevProps, nextProps) {
+  return (prevProps.firstName !== nextProps.firstName)
+      || (prevProps.lastName  !== nextProps.lastName)
+}
+```
+<div style="margin-top:-0.6em; opacity:0.3; font-size:70%">_(not the real react syntax)_</div>
+
+<br>
+
+```scala
+// Potential Scala solution
+def shouldComponentUpdate[A: Equal]: (A, A) => Boolean =
+  _ !== _
+```
+</script></section><section  data-markdown><script type="text/template">### shouldComponentUpdate ≠ equality
+
+* full equality might be slow;<br>faster less-accurate check might be desirable <!-- .element: class="fragment" -->
+* ID comparison might be enough <!-- .element: class="fragment" -->
+* Floating point - ignore Δ ≤ 0.1 <!-- .element: class="fragment" -->
+* Timestamp - ignore updates < 1 sec apart <!-- .element: class="fragment" -->
+</script></section><section  data-markdown><script type="text/template">### How would I support this in scalajs-react?
+
+<div class="fragment" />
+<br>
+<pre class=centre><code class="lang-scala hljs" data-trim>
+class Reusability[A](reuse: (A, A) => Boolean)
+
+// ∀A. Reusability(A) → shouldComponentUpdate
+def shouldComponentUpdate[A: Reusability]
+</code></pre>
+
+Typeclass: Reusability
+</script></section><section  data-markdown><script type="text/template">Add some typeclass instances...
+```scala
+object Reusability {
+  implicit def string: Reusability[String] =
+    by_==
+
+  implicit def list[A: Reusability]: Reusability[List[A]] =
+    byRef || byIterator
+
+  def derive[A]: Reusability[A] =
+    macro ReusabilityMacros.derive[A]
+}
+```
+
+* ∀ strings
+* ∀ lists
+* ∀ ADTs
+</script></section><section  data-markdown><script type="text/template">Success!
+
+```scala
+case class Person(firstName: String,
+                  lastName: String,
+                  siblings: List[Person])
+
+object Person {
+  implicit val reusability: Reusability[Person] =
+    Reusability.derive
+}
+```
+</script></section><section  data-markdown><script type="text/template">~~Success!~~
+
+```scala
+case class NameEditorProps(name      : String,
+                           updateName: String => IO[Unit])
+
+object NameEditorProps {
+  implicit val reusability: Reusability[NameEditorProps] =
+    Reusability.derive
+  // ^^^^^^^^^^^^^^^^^
+  // compilation error
+}
+```
+
+∀ functions?
+</script></section><section  data-markdown><script type="text/template">~~Success!~~
+
+```scala
+case class NameEditorProps(name      : String,
+                           updateName: String => IO[Unit],
+                           save      : IO[Unit])
+
+object NameEditorProps {
+  implicit val reusability: Reusability[NameEditorProps] =
+    Reusability.derive
+  // ^^^^^^^^^^^^^^^^^
+  // compilation error
+}
+```
+
+∀ functions?
+
+∀ IO?
+</script></section><section  data-markdown><script type="text/template">### No universal solution
+
+<div class="fragment" />
+<br>
+_"If I take care to create a single instance and reuse it,<br>
+reference equality will hold..."_
+
+```scala
+class Backend($: BackendScope[Props, State]) {
+
+  val updateName: String => IO[Unit] =
+    $.zoomState(State.name).set
+
+  val save: IO[Unit] =
+    IO { /** ajax or something */ }
+
+
+  // Reference equality works...
+  updateName eq updateName == true
+  save       eq save       == true
+```
+<div class="fragment" />
+
+Can't solve ∀ terms...
+
+∃ terms : Solvable.
+</script></section><section  data-markdown><script type="text/template"><pre class=centre><code class="lang-scala hljs" data-trim>
+def ShouldComponentUpdate[A: Reusability]
+</code></pre>
+
+<div class=centre style="font-size:200%">
+<div>∀A.</div>
+<div>Reusability(A) → </div>
+<div>ShouldComponentUpdate(A)</div>
+</div>
+</script></section><section  data-markdown><script type="text/template"><pre class=centre><code class="lang-scala hljs" data-trim>
+what we want...
+</code></pre>
+<div class=centre style="font-size:200%">
+<div>∃A. ∃x:A.</div>
+<div>Reusability(x) → </div>
+<div>ShouldComponentUpdate(A)</div>
+</div>
+</script></section><section  data-markdown><script type="text/template"><pre class=centre><code class="lang-scala hljs" data-trim>
+what we want...
+</code></pre>
+<div class=centre style="font-size:200%">
+<div>∃A. <span class=wrong>∃x:A.</span></div>
+<div>Reusability(<span class=wrong>x</span>) → </div>
+<div>ShouldComponentUpdate(A)</div>
+</div>
+</script></section><section  data-markdown><script type="text/template"><pre class=centre><code class="lang-scala hljs" data-trim>
+solution
+</code></pre>
+<div class=centre style="font-size:200%">
+<div>∃A. ∃x:A.</div>
+<div class=fragment>∃B:Reusability.</div>
+<div class=fragment>∃y:B. &nbsp;&nbsp; (x → y) →</div>
+<div class=fragment>ShouldComponentUpdate(B)</div>
+</div>
+</script></section><section  data-markdown><script type="text/template">```scala
+final case class B()
+
+object B {
+
+  def apply[A](x: A): B =
+    ???
+
+  implicit def reusability: Reusability[B] =
+    ???
+}
+```
+Logical structure
+</script></section><section  data-markdown><script type="text/template">```scala
+final case class B[A](value: A)
+
+object B {
+
+  def apply[A](x: A): B[A] =
+    new B(x)
+
+  implicit def reusability[A]: Reusability[B[A]] =
+    ???
+}
+```
+Retain the A value.
+</script></section><section  data-markdown><script type="text/template">```scala
+final case class B[A](value: A, reuse: A => Boolean)
+
+object B {
+
+  def apply[A](x: A)(reuse: A => Boolean): B[A] =
+    new B(x, reuse)
+
+  implicit def reusability[A]: Reusability[B[A]] =
+    ???
+}
+```
+Term Reusability
+</script></section><section  data-markdown><script type="text/template">```scala
+final case class B[A](value: A, reuse: A => Boolean)
+
+object B {
+
+  def apply[A](x: A)(reuse: A => Boolean): B[A] =
+    new B(x, reuse)
+
+  implicit def reusability[A]: Reusability[B[A]] =
+    Reusability((x, y) => x.reuse(y.value) && y.reuse(x.value))
+}
+```
+Reusability(B)
+</script></section><section  data-markdown><script type="text/template">```scala
+final case class Reusable[A](value: A, reuse: A => Boolean)
+
+object Reusable {
+
+  def apply[A](a: A)(reuse: A => Boolean): Reusable[A] =
+    new Reusable(a, reuse)
+
+  implicit def reusability[A]: Reusability[Reusable[A]] =
+    Reusability((x, y) => x.reuse(y.value) && y.reuse(x.value))
+}
+```
+Name it
+</script></section><section  data-markdown><script type="text/template">success!
+```scala
+case class NameEditorProps(name      : String,
+                           updateName: Reusable[String => IO[Unit]],
+                           save      : Reusable[IO[Unit]])
+
+object NameEditorProps {
+  implicit val reusability: Reusability[NameEditorProps] =
+    Reusability.derive
+    // hooray! it compiles!
+}
+```
+</script></section><section  data-markdown><script type="text/template">Add convenience method...
+
+```scala
+object Reusable {
+
+  def byRef[A <: AnyRef](a: A): Reusable[A] =
+    apply(a)(a eq _)
+}
+```
+</script></section><section  data-markdown><script type="text/template"><pre class=centre><code class="lang-scala hljs" data-trim>
+val updateName: Reusable[String => IO[Unit]] =
+  Reusable.byRef(
+    $.zoomState(State.name).set)
+
+
+val save: Reusable[IO[Unit]] =
+  Reusable.byRef(
+    IO { /&#42;&#42; ajax or something &#42;/ })
+</code></pre>
+</script></section><section  data-markdown><script type="text/template">### Real code
+
+See <span class=inline-pre>Reusable.scala</span> in the scalajs-react repo.
+
+It's evolved and looks quite different now.
+</script></section><section  data-markdown><script type="text/template">### Success!
+
+* <span style="color:hsl(286, 100%, 50%)">∀</span> <span style="color:hsl(126, 27%, 50%)">types</span>
+* <span style="color:hsl(36, 70%, 50%)">∃</span> <span style="color:hsl(126, 27%, 50%)">types</span> via Reusability
+* <span style="color:hsl(286, 100%, 50%)">∀</span> <span style="color:hsl(203, 100%, 50%)">terms</span> belonging to types with Reusability
+* <span style="color:hsl(36, 70%, 50%)">∃</span> <span style="color:hsl(203, 100%, 50%)">terms</span> via Reusable
+</script></section><section  data-markdown><script type="text/template"># <span class=header-highlight>Summary</span>
+</script></section><section  data-markdown><script type="text/template">* existential types are opaque
+* <!-- .element: class="fragment" --> existentially-typed solutions often require manual evidence propagation
+* <!-- .element: class="fragment" --> existential types are great for high- & low-detail
+* <!-- .element: class="fragment" --> parametric polymorphism = ∀ types
+* <!-- .element: class="fragment" --> typeclasses = ∃ types ∀ terms
+* <!-- .element: class="fragment" --> terms in contravariant position = ∀
+* <!-- .element: class="fragment" --> above 2 points can be circumvented by dedicated type
+* <!-- .element: class="fragment" --> terms in covariant position = ∃
+* <!-- .element: class="fragment" --> solving for ∀ and ∃ separately can be a practical solution
+</script></section><section  data-markdown><script type="text/template">
+# <span class=header-highlight>Thank You</span>
+
+<div class=thanks>
+<div class=slides-link>Code & Slides:<br><span class=github>https://github.com/japgolly/</span><span class=learning>learning</span></div>
+<div class="social github"><i class="fab fa-github-square" ></i><span class=brandme>japgolly</span></div>
+<div class="social twitter"><i class="fab fa-twitter-square"></i><span class=brandme>@japgolly</span></div>
+</div>
+</script></section></div>
+        </div>
+
+        <script src="./lib/js/head.min.js"></script>
+        <script src="./js/reveal.js"></script>
+
+        <script>
+            function extend() {
+              var target = {};
+              for (var i = 0; i < arguments.length; i++) {
+                var source = arguments[i];
+                for (var key in source) {
+                  if (source.hasOwnProperty(key)) {
+                    target[key] = source[key];
+                  }
+                }
+              }
+              return target;
+            }
+
+            // Optional libraries used to extend on reveal.js
+            var deps = [
+              { src: './lib/js/classList.js', condition: function() { return !document.body.classList; } },
+              { src: './plugin/markdown/marked.js', condition: function() { return !!document.querySelector('[data-markdown]'); } },
+              { src: './plugin/markdown/markdown.js', condition: function() { return !!document.querySelector('[data-markdown]'); } },
+              { src: './plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+              { src: './plugin/zoom-js/zoom.js', async: true },
+              { src: './plugin/notes/notes.js', async: true },
+              { src: './plugin/math/math.js', async: true }
+            ];
+
+            // default options to init reveal.js
+            var defaultOptions = {
+              controls: true,
+              progress: true,
+              history: true,
+              center: true,
+              transition: 'default', // none/fade/slide/convex/concave/zoom
+              dependencies: deps
+            };
+
+            // options from URL query string
+            var queryOptions = Reveal.getQueryHash() || {};
+
+            var options = {"fragments": false,"controls":false,"width":1440,"height":810,"transition":"none","transitionSpeed":"fast"};
+            options = extend(defaultOptions, options, queryOptions);
+        </script>
+
+
+        <script>
+            Reveal.initialize(options);
+        </script>
+    </body>
+</html>
