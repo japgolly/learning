@@ -1,6 +1,6 @@
 ## Video
 
-`pending`
+https://youtu.be/9RvWDDZK3D8
 
 
 ## Slides
