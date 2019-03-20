@@ -2,7 +2,7 @@
 
 EXTENDS FiniteSets, Naturals, Sequences, TLC
 
-CONSTANT User,
+CONSTANT User, \* Really this is a unique client/connection, not a ShipReq user/identity
          Request,
          MCVerLimit,
          MCAllowUserDisconnect
@@ -91,7 +91,16 @@ OfflineUserState == [
   future |-> {},
   reqs   |-> {}]
 
+GoOffline(u) == [u EXCEPT !.status = "offline", !.reqs = {}]
+
 OnlineUsers == {u \in User : userState[u].status /= "offline"}
+
+IsUserInUse(u) ==
+  \/ userState[u].status /= "offline"
+  \/ procsS[u] /= {}
+  \/ \E p \in procsU : p.user = u
+  \/ \E p \in procsL : p.user = u
+  \/ \E p \in pub    : p[1]   = u
 
 RedisPartialVer == IF redis.events = {} THEN redis.ver ELSE Max[redis.events]
 RedisTotalVer   == IF redis.ver    = 0  THEN 0         ELSE RedisPartialVer
@@ -153,17 +162,12 @@ RedisWriteSnapshot(ver, OnOk, OnFail) ==
 UserConnect ==
   /\ MCAllowAct
   /\ \E u \in User :
-     /\ userState[u].status = "offline"
-     /\ \A p \in procsU : p.user /= u \* A new user (connection) is distinct.
-                                      \* If the model value is still being used in an orphan proc, it can be recycled here yet
-     /\ \A p \in procsL : p.user /= u \* A new user (connection) is distinct.
-                                      \* If the model value is still being used in an orphan proc, it can be recycled here yet
-     /\ procsS[u] = {}
-     /\ userState' = [userState EXCEPT ![u].status = "loading"]
+     /\ ~IsUserInUse(u) \* A new user (connection) is distinct. If model value is still is use, it can't be recycled here yet
+     /\ userState' = [userState EXCEPT ![u] = [ver |-> 0, status |-> "loading", future |-> {}, reqs |-> {}]]
      /\ procsL' = procsL \union {InitProcL(u)}
      /\ UNCHANGED << db, redis, procsU, procsS, pub >>
 
-\* TODO Also model the fact that i'll start preloading on HTTP GET before the websocket connects
+\* TODO Add UserReconnect
 
 Load_ReadDbVer == \E p \in procsL :
   /\ p.status = "ReadDbVer"
@@ -351,7 +355,7 @@ UserDisconnect ==
   /\ MCAllowAct
   /\ MCAllowUserDisconnect
   /\ \E u \in User : userState[u].status /= "offline"
-    /\ userState' = [userState EXCEPT ![u] = OfflineUserState]
+    /\ userState' = [userState EXCEPT ![u] = GoOffline(@)]
     /\ pub'       = {usrEvt \in pub : usrEvt[1] /= u}
     /\ UNCHANGED << db, redis, procsU, procsL, procsS >>
 
@@ -367,7 +371,7 @@ WebappDeath ==
   /\ MCAllowAct
   /\ \E affectedUsers \in (SUBSET(OnlineUsers) \ {{}}) :
     /\ userState' = [u \in User |-> IF u \in affectedUsers
-                                    THEN OfflineUserState \* TODO Add reconnect suuport - this is the user reloading page
+                                    THEN GoOffline(userState[u])
                                     ELSE userState[u]]
     /\ procsL' = {p \in procsL : p.user \notin affectedUsers}
     /\ procsU' = {p \in procsU : p.user \notin affectedUsers}
