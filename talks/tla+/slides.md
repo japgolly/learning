@@ -206,9 +206,10 @@ _Fairness: X has to happen_
 
 ---
 
-* I deliberately added a bug in publish - didn't fail!
-* be suspicious
-* branch coverage
+* Deliberately drop out-of-order msgs - didn't fail!
+* suspicious
+* ユーザが困ったたび、とじちゃう
+* coverage
 
 ---
 
@@ -229,7 +230,7 @@ _Fairness: X has to happen_
 # Curbing ∞
 
 * problem
-* solution #1
+* potential solution #1
 
 ```
 +------------------+      +------------------+
@@ -254,6 +255,25 @@ _Fairness: X has to happen_
   * `FinalInvariants == MCDone => AllUsersUpToDate`
 * `shipreq.cfg`
 
+---
+
+## Proof of Eventual Consistency
+
+```
+MCAllowAct == db.ver < MCVerLimit
+MCDone     == ~MCAllowAct /\ ~ENABLED(React)
+MCContinue == ~MCDone
+
+AllUsersUpToDate ==
+  \A user \in User :
+    LET u == userState[user]
+        s == u.status
+    IN CASE s = "offline" -> TRUE
+         [] s = "loading" -> FALSE
+         [] s = "active"  -> u.ver = db.ver
+
+FinalInvariants == MCDone => AllUsersUpToDate
+```
 
 ---
 
@@ -262,6 +282,8 @@ When to snapshot?
 Who cares!
 
 Have TLC split into two timelines
+
+`THEOREM Spec => Impl`
 
 ---
 
@@ -273,9 +295,9 @@ Have TLC split into two timelines
 
 ## Model the universe!
 
-* Worker death *(...oh crap...)*
+* Worker death
   * Forgot about WorkerDeath
-  * "Already 'finished' spec, will take ages / effort!"
+  * *"Already 'finished' spec, will take ages / effort!"*
 
 ---
 
@@ -330,6 +352,13 @@ Finds crazy bugs that you'd never catch on your own...
 Two examples:
 
 ---
+
+Imagine a bug report like this, then having to track it down:
+
+<br><br>
+*"We keep getting reports that users randomly stop getting updates and can't see their changes."*
+
+---
 <div style="font-size:60%; white-space:pre; text-align:left; display:flex">
 <div style="padding-right:4em">State  1: Initial predicate
 State  2: UserConnect
@@ -364,12 +393,6 @@ State 22: Publish
 /\ pub       = {}
 /\ userState = (u1 :> [ver |-> 1, status |-> "active", future |-> {3}, reqs |-> {}])
 <div>
-
----
-
-Imagine a bug report describing this, then having to track it down!
-
-*"We keep getting reports that users randomly stop getting updates and can't see their changes."*
 
 ---
 
@@ -412,8 +435,11 @@ Another example error:
 # Not perfect
 
 * Abysmal stdlib
+
 * Not sure how to test efficiency...<br>Eg. bug that results in 90% cache misses
-* Model checking can be slow
+
+* Model checking can be slow <span style="opacity:0.8">*(spec + MC < Σ bug)*</span>
+
 * Sometimes hard to ensure correctness
 
 <span style="opacity:0.5">*(still a huge improvement though)*</span>
