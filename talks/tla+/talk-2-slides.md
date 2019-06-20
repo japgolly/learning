@@ -769,7 +769,6 @@ def apply(pid: ProjectId, mkEvent: Project => MakeEvent.Result): F[Result] = {
 * Scala tests: no
 * Scala invariants: no
 
-
 ---
 
 <pre><code class="lang-tla hljs" style="font-size:70%" data-trim data-noescape>
@@ -795,15 +794,13 @@ This simple step involves:
 
 Even the simplest TLA+ atom like:
 
-```tla
-VARIABLE db \* Project version / number of events 
-```
-
-<br>
+<div style="font-family:monospace; font-size:50%; margin-bottom:2em; background:#000">
+VARIABLE db <span style="color:#888">\\* Project version. Number of events.</span>
+</div>
 
 Ends up with this much Scala interface:
 
-<pre><code class="lang-scala hljs" style="font-size:80%" data-trim data-noescape>
+<pre><code class="lang-scala hljs" style="font-size:70%" data-trim data-noescape>
 def getProjectMetaData(id: ProjectId): F[Option[ProjectMetaData]]
 
 def getProjectEvents(id: ProjectId, f: EventFilter): F[VerifiedEvent.Seq]
@@ -823,6 +820,9 @@ object EventFilter {
       case None      => IncludeAll
     }
 }
+
+def saveProjectEvent(id: ProjectId, ord: EventOrd, event: ActiveEvent, hashes: HashRecs)
+  : F[Throwable \/ VerifiedEvent]
 </code></pre>
 
 ---
@@ -831,6 +831,14 @@ object EventFilter {
 
 <br>
 
-TLA+ = slice of time, spanning all space
+TLA+ = <span style="background:#f11">abstract</span> slices of <span style="background:#993;color:#000">time</span>, spanning all <span style="background:#33a">space</span>
 
-Code = layer of space, spanning all time
+Code = <span style="color:red; font-weight:bold">detailed</span> slice of <span style="background:#33a">space</span>, spanning all <span style="background:#993;color:#000">time</span>
+
+---
+
+Is TLA+ worth it considering the dev/test effort required once a spec is complete?
+
+<br>
+
+Yes x100!
