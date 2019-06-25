@@ -30,7 +30,7 @@ Init       == h \in 1..12
 Next       == h' = (h % 12) + 1
 
 Spec == Init /\ [][Next]_h
-THEOREM Spec => []Invariants
+THEOREM Spec => [][Invariants]
 ```
 
 ---
@@ -40,10 +40,10 @@ THEOREM Spec => []Invariants
 * Well-behaved ~~code~~ systems can be hard
   * Service interaction and coordination *(e2e it)*
   * Resource management *(eg WSClient)*
-* Cache invalidation
-* Distributed atomicity / transactions
-* Consistency guarantees
-* Failure resilience / availability
+* Cache invalidation <!-- .element: class="fragment" -->
+* Distributed atomicity / transactions <!-- .element: class="fragment" -->
+* Consistency guarantees <!-- .element: class="fragment" -->
+* Failure resilience / availability <!-- .element: class="fragment" -->
 
 ---
 
@@ -57,8 +57,6 @@ Why is it useful?
 
 ---
 
-## What next?
-
 1. Write spec
 2. Verify
 3. <span style="color:red">???</span>
@@ -67,13 +65,20 @@ Why is it useful?
 
 ---
 
-## What next?
-
 1. Write spec
 2. Verify
 3. <span style="color:#33bb33">&lt;share my experience&gt;</span>
 4. Ship amazing product
 5. Profit
+
+---
+
+1. Write spec
+2. Verify
+3. &lt;share my experience&gt;
+4. Ship amazing product
+5. <span style="color:red">??? *&#42;cries in Business&#42;*</span>
+6. Profit
 
 ---
 
@@ -91,7 +96,7 @@ Why is it useful?
 
 ---
 
-### Goals
+### Spec Goals
 
 1. Distributed cache
 2. Eventual consistency
@@ -131,9 +136,9 @@ React ==
 
 ### Lets just look at a single slice
 
-1. UpdateRequest
-2. UpdateRespond
-3. RedisPublishEvent
+1. &nbsp; `UpdateRequest`
+2. &nbsp; `UpdateRespond`
+3. &nbsp; `RedisPublishEvent`
 
 ---
 
@@ -148,7 +153,6 @@ VARIABLES redis, \* The state of Redis
           pub,   \* Set of events being published
           sub,   \* Users subscribed to event topic
 
-
 TypeInvariants ==
   /\ redis \in [
        ver   : Nat,        \* snapshot ver; 0=none
@@ -157,24 +161,29 @@ TypeInvariants ==
   /\ sub \in SUBSET User
 ```
 
+```scala
+type Redis = {ver: Int, events: Set[Int]}
+type Pub   = Set[(User, Int)]
+type Sub   = Set[User]
+```
+
 ---
 
 <pre><code class="lang-tla hljs" data-trim data-noescape style="font-size:75%; margin-bottom:2em">
 DataInvariants ==
 
-  /\ \A u \in User :
-    LET s == userState[u]
-    IN s.status = "offline" => (u \notin sub)
+  /\ \A u \in User : userState[u].status = "offline" => (u \notin sub)
 
   /\ redis.ver <= db.ver
 
+  \* No gaps in Redis events
   /\ \A e \in redis.events :
-    /\ \* No gaps in Redis events
        IF redis.ver > 0
        THEN (e - 1) \in (redis.events \union {redis.ver}) \* all events proceed snapshot
        ELSE (e - 1) \in (redis.events) \/ e = Min[redis.events]
 </code></pre>
 
+<div class="fragment" />
 
 * Spec is more capable than code.
   Invariants about distributed entities at exact same time:
@@ -274,14 +283,14 @@ trait Redis[F[_]] {
 
 ---
 
-<pre><code class="lang-diff hljs" style="font-size:100%" data-trim data-noescape>
+<pre><code class="lang-diff hljs" style="font-size:70%; line-height:1.2em" data-trim data-noescape>
 +PublishEvents(events) ==
 +  pub' = pub \union (sub \X events)
 +
  RedisWriteSnapshot(ver, eventsToPublish, OnOk, OnFail) ==
    /\ IF ver > redis.ver
       THEN
-@@ -176,7 +183,7 @@ RedisWriteSnapshot(ver, eventsToPublish, OnOk, OnFail) ==
+<span style="color:#ff8">@@ -176,7 +183,7 @@ RedisWriteSnapshot(ver, eventsToPublish, OnOk, OnFail) ==</span>
         \* Redis has a more recent state than this proc
         /\ UNCHANGED redis
         /\ OnFail
@@ -290,7 +299,7 @@ trait Redis[F[_]] {
 
  RedisWriteEvents(eventsToCache, eventsToCacheAndPublish, OnOk, OnFail) ==
    LET events     == eventsToCache \union eventsToCacheAndPublish
-@@ -191,7 +198,23 @@ RedisWriteEvents(eventsToCache, eventsToCacheAndPublish, OnOk, OnFail) ==
+<span style="color:#ff8">@@ -191,7 +198,23 @@ RedisWriteEvents(eventsToCache, eventsToCacheAndPublish, OnOk, OnFail) ==</span>
            fail \* Gaps in redis.events prohibited
          ELSE
            apply
@@ -316,7 +325,7 @@ trait Redis[F[_]] {
 
   def publishEvents(
     id: ProjectId,
-    events: VerifiedEvent.NonEmptySeq): F[Unit]
+    events: NonEmptySet[VerifiedEvent]): F[Unit]
 
 }
 ```
@@ -469,7 +478,7 @@ RedisWriteSnapshot(ver, eventsToPublish, OnOk, OnFail) ==
 
 RedisWriteSnapshot in Lua
 
-<pre><code class="lang-lua hljs" style="font-size:100%" data-trim data-noescape>
+<pre><code class="lang-lua hljs" style="font-size:70%; line-height:1.2em" data-trim data-noescape>
 local ks  = KEYS[1]
 local ke  = KEYS[2]
 local c   = ARGV[1]
@@ -516,7 +525,7 @@ RedisWriteEvents(eventsToCache, eventsToCacheAndPublish, OnOk, OnFail) ==
 
 😂 RedisWriteEvents in Lua 😆
 
-<pre><code class="lang-lua hljs" style="font-size:50%" data-trim data-noescape>
+<pre><code class="lang-lua hljs" style="font-size:50%; line-height:1.2em" data-trim data-noescape>
 -- writeEvents [key] [key] [channel] ([cmd] [event data] …)
 
 local ks = KEYS[1]
@@ -609,8 +618,8 @@ TypeInvariants ==
 req     : Request,
 status  : {"ReadRedis", "ReadDb", "WriteRedis1", "WriteDb", "WriteRedis2", "Respond"},
 user    : User,
-redisVer: Nat, \* The version of Redis at the last read from Redis
-ver     : Nat] \* The version of the Project in memory (0=none)
+redisVer: Nat, \&#42; The version of Redis at the last read from Redis
+ver     : Nat] \&#42; The version of the Project in memory (0=none)
 </code></pre>
 <hr>
 <table>
@@ -632,7 +641,7 @@ redisVer: Nat, \* The version of Redis at the last read from Redis
 ver     : Nat] \* The version of the Project in memory (0=none)
 </code></pre>
 <hr>
-<pre><code class="lang-scala hljs" style="font-size:80%" data-trim data-noescape>
+<pre><code class="lang-scala hljs" style="font-size:80%; line-height:1.2em" data-trim data-noescape>
 final case class State(local : ProjectAndOrd,
                        redis : Redis.ProjectCache,
                        status: Status)
@@ -671,11 +680,11 @@ Update_ReadRedis == \E p \in procsU :
 </code></pre>
 
 <hr>
-<pre><code class="lang-scala hljs" style="font-size:90%" data-trim data-noescape>
+<pre><code class="lang-scala hljs" style="font-size:90%; line-height:1.2em" data-trim data-noescape>
 case ReadRedis =>
   for {
-    r     ← redis.read(pid)
-    built ← r.build(pid)
+    r     <- redis.read(pid)
+    built <- r.build(pid)
   } yield built match {
     
     case \/-(p) => -\/(s.copy(local  = p,
@@ -704,10 +713,10 @@ Update_ReadDb == \E p \in procsU :
 <pre><code class="lang-scala hljs" style="font-size:85%" data-trim data-noescape>
 case ReadDb =>
   for {
-    cacheBuilt ← s.redis.buildNonEmpty(pid)
-    p1         = s.local max cacheBuilt
-    newEvents  ← runDB(db.getProjectEvents(pid, DB.EventFilter.given(p1.ord)))
-    built      ← apEvent.append(pid, p1, newEvents)
+    cacheBuilt <- s.redis.buildNonEmpty(pid)
+    p1          = s.local max cacheBuilt
+    newEvents  <- runDB(db.getProjectEvents(pid, DB.EventFilter.given(p1.ord)))
+    built      <- apEvent.append(pid, p1, newEvents)
   } yield built match {
 
     case \/-(p2) => -\/(s.copy(local  = p2,
@@ -732,18 +741,18 @@ UpdateRespond ==
 </code></pre>
 
 <hr>
-<pre><code class="lang-scala hljs" style="font-size:80%" data-trim data-noescape>
+<pre><code class="lang-scala hljs" style="font-size:75%; line-height:1.2em" data-trim data-noescape>
 type Result = ErrorMsg \/ VerifiedEvent.Seq
 
 def apply(pid: ProjectId, mkEvent: Project => MakeEvent.Result): F[Result] = {
 
   def loop(s: State): F[State \/ Result] = {
     val main: F[State \/ Result] = s.status match {
-      case ReadRedis                         => omg
-      case ReadDb                            => wow
-      case WriteRedis1(newEvents)            => so
-      case WriteDb                           => patten
-      case WriteRedis2(newProject, newEvent) => metch
+      case ReadRedis                         => ...
+      case ReadDb                            => ...
+      case WriteRedis1(newEvents)            => ...
+      case WriteDb                           => ...
+      case WriteRedis2(newProject, newEvent) => ...
     }
     trace.newSpan(s.status.name)(_ =>
       metrics.projectSpaWebSocketStep("update", s.status.name)(
@@ -756,18 +765,27 @@ def apply(pid: ProjectId, mkEvent: Project => MakeEvent.Result): F[Result] = {
 
 ---
 
-…then finally all of this code gets tests as thoroughly as you would test anything else, TLA+ spec or no
+…then finally all of this code gets tested as<br>thoroughly as you would test anything else,<br>TLA+ spec or no
+
+---
+
+<span style="font-size:50%">interesting but…</span>
+
+# Can TLA+ GENERATE CODE? OR DATA / MODELS? OR TESTS? NOT TO WOULD MEAN DUPLICATION AND DISASTER.
 
 ---
 
 ## Could TLA+ generate...
 
-* Lua code: no
-* Scala data/models: no
-* Scala logic: no
-* Scala laws: no
-* Scala tests: no
-* Scala invariants: no
+<br>
+
+* Scala data/models: <span style="color:#f88">no</span>
+* Scala logic: <span style="color:#f88">no</span>
+* Scala laws: <span style="color:#f88">no</span>
+* Scala tests: <span style="color:#f88">no</span>
+* Scala invariants: <span style="color:#f88">no</span>
+* Lua code: <span style="color:#f88">no</span>
+* SQL: <span style="color:#f88">no</span>
 
 ---
 
@@ -798,9 +816,10 @@ Even the simplest TLA+ atom like:
 VARIABLE db <span style="color:#888">\\* Project version. Number of events.</span>
 </div>
 
+<div class="fragment" />
 Ends up with this much Scala interface:
 
-<pre><code class="lang-scala hljs" style="font-size:70%" data-trim data-noescape>
+<pre><code class="lang-scala hljs" style="font-size:70%; line-height:1.2em" data-trim data-noescape>
 def getProjectMetaData(id: ProjectId): F[Option[ProjectMetaData]]
 
 def getProjectEvents(id: ProjectId, f: EventFilter): F[VerifiedEvent.Seq]
@@ -809,9 +828,7 @@ sealed trait EventFilter
 object EventFilter {
 
   case object IncludeAll extends EventFilter
-
   final case class ExcludeUpTo(ord: EventOrd) extends EventFilter
-
   final case class Set(ords: NonEmptySet[EventOrd]) extends EventFilter
 
   def given(alreadyGot: Option[EventOrd.Latest]): EventFilter =
@@ -841,4 +858,4 @@ Is TLA+ worth it considering the dev/test effort required once a spec is complet
 
 <br>
 
-Yes x100!
+My opinion = Yes x100!
