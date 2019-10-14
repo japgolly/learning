@@ -8,6 +8,7 @@
   - 0-1 ELB
   - 0-1 Route 53 namespace for "service discovery integration" (?)
   - 0-1 Auto Scaling policy
+  - 0-n SGs
 
 - Task def
   - docker image & everything else in docker compose (inc volumes, cpu/mem, network etc)
@@ -53,4 +54,11 @@
     - 0-n EC2s
       - 1 ECS agent (optionally with cluster name)
         - 1 cluster
+  - 0-1 placement groups
 
+- ALB
+  - 0-n ALB listeners
+    - 1 TG
+  - 2-n AZs
+    - 1 subnet
+  - 1 SG
