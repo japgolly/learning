@@ -1,7 +1,7 @@
 Software Requirements (2nd ed)
 ==============================
 
-![](software_requirements-process.jpg)
+![](images/software_requirements-process.jpg)
 
 
 ## 1. Business Requirements
@@ -106,7 +106,7 @@ Software Requirements (2nd ed)
 
 * Types of requirements:
 
-  ![](software_requirements-reqtypes.png)
+  ![](images/software_requirements-reqtypes.png)
 
 * Probe around the exceptions. What could prevent the user from successfully completing a task? How should the system respond to various error conditions? Ask questions that begin with "What else could…," "What happens when…," "Would you ever need to…," "Where do you get…," "Why do you (or don't you)…," and "Does anyone ever…"
 
@@ -123,7 +123,7 @@ Software Requirements (2nd ed)
 
 * A requirements technique often used for real-time systems is to list the external events to which the system must react and the corresponding system responses.
 
-  ![](software_requirements-uc.jpg)
+  ![](images/software_requirements-uc.jpg)
 
 * Estimating the frequency of use provides an early indicator of concurrent usage and capacity requirements.
 
@@ -146,7 +146,7 @@ Software Requirements (2nd ed)
 
 * Event-response diagram:
 
-  ![](software_requirements-erd.jpg)
+  ![](images/software_requirements-erd.jpg)
 
 
 ## Ch 8 - Understanding User Requirements
@@ -191,7 +191,7 @@ Types of business rules:
 
 * SRS template:
 
-  ![](software_requirements-srs.jpg)
+  ![](images/software_requirements-srs.jpg)
 
 * Ambiguous Terms to Avoid in Requirements Specifications
 
@@ -264,7 +264,7 @@ Types of business rules:
 * [reliability] Establish quantitative reliability requirements based on how severe the impact would be if a failure occurred and whether the cost of maximising the reliability is justifiable.
 * Don’t forget to consider how you’ll evaluate a product to see whether it satisfies its quality attributes.
 
-  ![](software_requirements-qa_matrix.jpg)
+  ![](images/software_requirements-qa_matrix.jpg)
 
 ## Ch 13
 

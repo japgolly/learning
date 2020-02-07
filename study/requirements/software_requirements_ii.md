@@ -43,7 +43,7 @@ Software Requirements II (More About)
 
 * Use case points!
 
-  ![](software_requirements_ii-ucp.png)
+  ![](images/software_requirements_ii-ucp.png)
 
 * Use case points, step-by-step
 
@@ -318,7 +318,7 @@ Quality attributes and constraints are usually written in the form of structured
 * Business rule can usually result in multiple functional requirements that enforce it.
 
 
-  ![](software_requirements_ii-br.jpg)
+  ![](images/software_requirements_ii-br.jpg)
 
 # Ch 22
 
