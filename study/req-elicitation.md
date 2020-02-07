@@ -117,3 +117,29 @@ Context-Free Questions
   * I noticed that you hesitated a long time before answering that question. Is there something else we should know?
   * When I asked X about that, she said Y. Do you have any idea why she might’ve said Y?
   * I notice you don’t seem to agree with that reply. Would you tell us about that?
+
+
+
+How to find missing requirements
+================================
+
+Reminder: You’ll never discover all of your requirements up front.
+
+* Probe around the exceptions. What could prevent the user from successfully completing a task? How should the system respond to various error conditions?
+  Ask questions that begin with "What else could…," "What happens when…," "Would you ever need to…," "Where do you get…," "Why do you (or don't you)…," and "Does anyone ever…"
+
+* Decompose high-level reqs into non-vague detail. Avoid words like: support, enable, permit, process, and manage.
+
+* Make sure all user classes have provided input.
+
+* Trace requirements, use cases etc. to make sure nothing is missing from detailed functional requirements.
+
+* Check boundaries (like testing)
+
+* Use pictures instead of words.
+
+* Requirements with boolean logic (AND, NOT, OR) should be examined for all combinations of true/false.
+
+* CRUDL matrix between use-cases and entities.
+
+* List the external events to which the system must react and the corresponding system responses.
